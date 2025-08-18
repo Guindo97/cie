@@ -28,7 +28,7 @@ const Services = ({ t }) => {
       description: t.services.educationDesc,
       icon: "fas fa-graduation-cap",
       color: "from-purple-500 to-pink-500",
-      features: ["Cours de français", "Culture pour enfants", "Soutien scolaire"]
+      features: ["Cours d'anglais", "Culture pour enfants", "Soutien scolaire"]
     },
     {
       title: t.services.support,
