@@ -161,7 +161,7 @@ export const translations = {
       subtitle: "We are here to listen",
       address: "Edmonton, Alberta, Canada",
       email: "info@ivorian-community-edmonton.ca",
-      phone: "+1 (780) 123-4567",
+      phone: "+1 (780) 720-3996",
       form: {
         name: "Full Name",
         email: "Email Address",
