@@ -91,7 +91,7 @@ export const translations = {
       subtitle: "Nous sommes à votre écoute",
       address: "Edmonton, Alberta, Canada",
       email: "info@communaute-ivoirienne-edmonton.ca",
-      phone: "+1 (780) 123-4567",
+      phone: "+1 (780) 720-3996",
       form: {
         name: "Nom complet",
         email: "Adresse email",
