@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Evenements = ({ t }) => {
+  // ⚙️ Données d'événements (tu peux les modifier librement)
   const upcomingEvents = [
     {
       title: "Fête de l'Indépendance 2024",
@@ -52,6 +53,37 @@ const Evenements = ({ t }) => {
     }
   ];
 
+  // 🧠 State du formulaire modal
+  const [open, setOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const INTERAC_NUMBER = "+1 (780) 720-3996"; // ← Ton numéro Interac
+
+  const openForm = (eventTitle) => {
+    setSelectedEvent(eventTitle);
+    setOpen(true);
+  };
+
+  const closeForm = () => {
+    setOpen(false);
+    setFirstName("");
+    setLastName("");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Ici tu pourrais envoyer à une API, Google Sheet, EmailJS, etc.
+    alert(
+      `${t.events.form.success}\n\n` +
+      `${t.events.form.summaryName}: ${firstName} ${lastName}\n` +
+      `${t.events.form.summaryEvent}: ${selectedEvent}\n` +
+      `${t.events.form.summaryPayment}: ${INTERAC_NUMBER}`
+    );
+    closeForm();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-green-50 py-20">
       <div className="max-w-7xl mx-auto px-4">
@@ -94,7 +126,10 @@ const Evenements = ({ t }) => {
                     </div>
                   </div>
                   <p className="text-gray-600 mb-6 leading-relaxed">{event.description}</p>
-                  <button className="w-full bg-gradient-to-r from-orange-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                  <button
+                    onClick={() => openForm(event.title)}
+                    className="w-full bg-gradient-to-r from-orange-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  >
                     <i className="fas fa-ticket-alt mr-2"></i>
                     {t.events.register}
                   </button>
@@ -122,6 +157,108 @@ const Evenements = ({ t }) => {
           </div>
         </div>
       </div>
+
+      {/* MODAL Formulaire d'inscription */}
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* overlay */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={closeForm}
+            aria-hidden="true"
+          />
+          {/* modal */}
+          <div className="relative z-10 w-full max-w-xl mx-4">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+              <div className="bg-gradient-to-r from-orange-500 to-green-500 px-6 py-4 text-white flex items-center justify-between">
+                <h3 className="text-lg font-semibold">
+                  {t.events.form.title}
+                </h3>
+                <button
+                  onClick={closeForm}
+                  className="text-white/90 hover:text-white"
+                  aria-label={t.events.form.close}
+                >
+                  <i className="fas fa-times text-xl" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="p-6 space-y-5">
+                {/* Nom */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-2">
+                      {t.events.form.lastName}
+                    </label>
+                    <input
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-2">
+                      {t.events.form.firstName}
+                    </label>
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Événement (pré-rempli) */}
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2">
+                    {t.events.form.eventName}
+                  </label>
+                  <input
+                    type="text"
+                    value={selectedEvent}
+                    readOnly
+                    className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl"
+                  />
+                </div>
+
+                {/* Paiement Interac */}
+                <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-4">
+                  <h4 className="font-semibold text-gray-800 mb-1 flex items-center">
+                    <i className="fas fa-money-check-alt text-green-500 mr-2" />
+                    {t.events.form.paymentTitle}
+                  </h4>
+                  <p className="text-gray-600">
+                    {t.events.form.paymentDesc}{" "}
+                    <span className="font-semibold text-gray-800">{INTERAC_NUMBER}</span>.
+                  </p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={closeForm}
+                    className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700"
+                  >
+                    {t.events.form.cancel}
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-green-500 text-white font-semibold hover:shadow-lg"
+                  >
+                    <i className="fas fa-paper-plane mr-2" />
+                    {t.events.form.submit}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

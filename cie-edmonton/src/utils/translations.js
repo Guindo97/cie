@@ -48,12 +48,28 @@ export const translations = {
       historyText: "Fondée en 2015 par un groupe de familles ivoiriennes passionnées, notre communauté a grandi pour devenir un pilier essentiel de la diaspora ivoirienne en Alberta."
     },
     events: {
-      title: "Nos Événements",
-      subtitle: "Célébrons ensemble notre culture",
-      upcoming: "Événements à venir",
-      past: "Événements passés",
-      register: "S'inscrire"
-    },
+  title: "Nos Événements",
+  subtitle: "Célébrons ensemble notre culture",
+  upcoming: "Événements à venir",
+  past: "Événements passés",
+  register: "S'inscrire",
+  form: {
+    title: "Inscription à l'événement",
+    firstName: "Prénom",
+    lastName: "Nom",
+    eventName: "Nom de l'événement",
+    paymentTitle: "Paiement par Interac",
+    paymentDesc: "Veuillez envoyer votre paiement par virement Interac/e-Transfer au numéro",
+    submit: "Envoyer l'inscription",
+    cancel: "Annuler",
+    close: "Fermer",
+    success: "Merci ! Votre demande d'inscription a été prise en compte.",
+    summaryName: "Nom",
+    summaryEvent: "Événement",
+    summaryPayment: "Paiement Interac au"
+  }
+},
+
     services: {
       title: "Nos Services",
       subtitle: "Nous sommes là pour vous accompagner",
@@ -133,13 +149,29 @@ export const translations = {
       history: "Our History",
       historyText: "Founded in 2015 by a group of passionate Ivorian families, our community has grown to become an essential pillar of the Ivorian diaspora in Alberta."
     },
-    events: {
-      title: "Our Events",
-      subtitle: "Let's celebrate our culture together",
-      upcoming: "Upcoming Events",
-      past: "Past Events",
-      register: "Register"
-    },
+   events: {
+  title: "Our Events",
+  subtitle: "Let's celebrate our culture together",
+  upcoming: "Upcoming Events",
+  past: "Past Events",
+  register: "Register",
+  form: {
+    title: "Event Registration",
+    firstName: "First name",
+    lastName: "Last name",
+    eventName: "Event name",
+    paymentTitle: "Interac Payment",
+    paymentDesc: "Please send your payment via Interac e-Transfer to",
+    submit: "Submit registration",
+    cancel: "Cancel",
+    close: "Close",
+    success: "Thank you! Your registration request has been received.",
+    summaryName: "Name",
+    summaryEvent: "Event",
+    summaryPayment: "Interac payment to"
+  }
+},
+
     services: {
       title: "Our Services",
       subtitle: "We are here to support you",
