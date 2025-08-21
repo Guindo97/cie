@@ -1,4 +1,6 @@
+// src/components/Accueil.jsx
 import React, { useEffect, useRef, useState } from 'react';
+import Footer from './Footer'; // ← IMPORTANT: chemin correct
 
 /** Petit composant compteur animé (entier uniquement) */
 const Counter = ({ end = 0, duration = 1200, suffix = "" }) => {
@@ -11,7 +13,7 @@ const Counter = ({ end = 0, duration = 1200, suffix = "" }) => {
     if (!el) return;
 
     const start = () => {
-      if (startedRef.current) return; // éviter plusieurs démarrages
+      if (startedRef.current) return;
       startedRef.current = true;
 
       const startTime = performance.now();
@@ -24,7 +26,6 @@ const Counter = ({ end = 0, duration = 1200, suffix = "" }) => {
       requestAnimationFrame(animate);
     };
 
-    // Lance l'animation quand visible
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -46,8 +47,7 @@ const Counter = ({ end = 0, duration = 1200, suffix = "" }) => {
   );
 };
 
-const Accueil = ({ t, setCurrentPage }) => {
-  // Deux cartes avec compteur (1 et 4), 24 et 8 restent statiques
+const Accueil = ({ t, language, setCurrentPage }) => {
   const stats = [
     { type: 'counter', end: 250, suffix: '+', label: t.home.stats.members, icon: 'fas fa-users' },
     { type: 'static', text: '24', label: t.home.stats.events, icon: 'fas fa-calendar-alt' },
@@ -181,6 +181,9 @@ const Accueil = ({ t, setCurrentPage }) => {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer t={t} language={language} setCurrentPage={setCurrentPage} />
     </div>
   );
 };
