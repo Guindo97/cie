@@ -29,9 +29,9 @@ const APropos = ({ t }) => {
   ];
 
   const teamMembers = [
-    { name: "Kouassi Adjé", role: "Président", image: "👨🏿‍💼" },
-    { name: "Aminata Traoré", role: "Vice-Présidente", image: "👩🏿‍💼" },
-    { name: "Yao N'Guessan", role: "Secrétaire", image: "👨🏿‍💻" }
+    { name: "Ambroise Gnohan", role: "Président", image: "👨🏿‍💼" },
+    { name: "Edith N'Takpé", role: "Vice-Présidente", image: "👩🏿‍💼" },
+    { name: "Ange Kouadio", role: "Secrétaire", image: "👨🏿‍💻" }
   ];
 
   // Map simple FR -> key -> t.about.roles[key]
