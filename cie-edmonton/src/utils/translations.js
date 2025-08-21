@@ -62,7 +62,8 @@ export const translations = {
         lastName: "Nom",
         eventName: "Nom de l'événement",
         paymentTitle: "Paiement par Interac",
-        paymentDesc: "Veuillez envoyer votre paiement par virement Interac/e-Transfer au numéro",
+        paymentDesc: "Veuillez envoyer votre paiement par virement Interac/e-Transfer au numéro suivant :",
+        paymentNumber: "+1 (780) 720-3996",
         submit: "Envoyer l'inscription",
         cancel: "Annuler",
         close: "Fermer",
@@ -70,6 +71,49 @@ export const translations = {
         summaryName: "Nom",
         summaryEvent: "Événement",
         summaryPayment: "Paiement Interac au"
+      },
+      // Contenu TRADUIT des cartes (FR)
+      items: {
+        upcoming: [
+          {
+            key: "independence2024",
+            title: "Fête de l'Indépendance 2024",
+            date: "7 août 2024",
+            time: "18h00 - 23h00",
+            location: "Centre communautaire d'Edmonton",
+            description:
+              "Célébration de l'indépendance de la Côte d'Ivoire avec spectacles, cuisine traditionnelle et danses.",
+            image: "🎉",
+            price: "Gratuit"
+          },
+          {
+            key: "fallCulturalNight",
+            title: "Soirée Culturelle Automne",
+            date: "15 septembre 2024",
+            time: "19h00 - 22h00",
+            location: "Salle des fêtes Alberta",
+            description:
+              "Soirée dédiée à la culture ivoirienne avec contes, musique et dégustation.",
+            image: "🎭",
+            price: "15$ CAD"
+          },
+          {
+            key: "ivorianCookingWorkshop",
+            title: "Atelier Cuisine Ivoirienne",
+            date: "22 octobre 2024",
+            time: "14h00 - 17h00",
+            location: "École culinaire d'Edmonton",
+            description:
+              "Apprenez à préparer les plats traditionnels ivoiriens avec nos chefs.",
+            image: "👩‍🍳",
+            price: "25$ CAD"
+          }
+        ],
+        past: [
+          { key: "openHouseDay", title: "Journée Portes Ouvertes", date: "12 mai 2024", participants: "85 personnes", image: "🏠" },
+          { key: "easterFestival", title: "Festival de Pâques", date: "31 mars 2024", participants: "120 personnes", image: "🐰" },
+          { key: "yearEndGala", title: "Gala de Fin d'Année", date: "16 décembre 2023", participants: "200 personnes", image: "✨" }
+        ]
       }
     },
     services: {
@@ -146,6 +190,7 @@ export const translations = {
       }
     }
   },
+
   en: {
     nav: {
       home: "Home",
@@ -209,7 +254,8 @@ export const translations = {
         lastName: "Last name",
         eventName: "Event name",
         paymentTitle: "Interac Payment",
-        paymentDesc: "Please send your payment via Interac e-Transfer to",
+        paymentDesc: "Please send your payment via Interac e-Transfer to the following number:",
+        paymentNumber: "+1 (780) 720-3996",
         submit: "Submit registration",
         cancel: "Cancel",
         close: "Close",
@@ -217,6 +263,49 @@ export const translations = {
         summaryName: "Name",
         summaryEvent: "Event",
         summaryPayment: "Interac payment to"
+      },
+      // Card content (EN)
+      items: {
+        upcoming: [
+          {
+            key: "independence2024",
+            title: "Independence Day 2024",
+            date: "August 7, 2024",
+            time: "6:00 PM – 11:00 PM",
+            location: "Edmonton Community Centre",
+            description:
+              "Celebrate Côte d’Ivoire’s Independence with performances, traditional cuisine, and dances.",
+            image: "🎉",
+            price: "Free"
+          },
+          {
+            key: "fallCulturalNight",
+            title: "Fall Cultural Night",
+            date: "September 15, 2024",
+            time: "7:00 PM – 10:00 PM",
+            location: "Alberta Banquet Hall",
+            description:
+              "An evening dedicated to Ivorian culture with storytelling, music, and tastings.",
+            image: "🎭",
+            price: "CAD $15"
+          },
+          {
+            key: "ivorianCookingWorkshop",
+            title: "Ivorian Cooking Workshop",
+            date: "October 22, 2024",
+            time: "2:00 PM – 5:00 PM",
+            location: "Edmonton Culinary School",
+            description:
+              "Learn how to prepare traditional Ivorian dishes with our chefs.",
+            image: "👩‍🍳",
+            price: "CAD $25"
+          }
+        ],
+        past: [
+          { key: "openHouseDay", title: "Open House Day", date: "May 12, 2024", participants: "85 people", image: "🏠" },
+          { key: "easterFestival", title: "Easter Festival", date: "March 31, 2024", participants: "120 people", image: "🐰" },
+          { key: "yearEndGala", title: "Year-End Gala", date: "December 16, 2023", participants: "200 people", image: "✨" }
+        ]
       }
     },
     services: {
