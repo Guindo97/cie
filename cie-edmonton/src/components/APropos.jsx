@@ -29,10 +29,17 @@ const APropos = ({ t }) => {
   ];
 
   const teamMembers = [
-    { name: "Ambroise Gnohan", role: "Président", image: "👨🏿‍💼" },
-    { name: "Edith Ntakpé", role: "Vice-Présidente", image: "👩🏿‍💼" },
+    { name: "Kouassi Adjé", role: "Président", image: "👨🏿‍💼" },
+    { name: "Aminata Traoré", role: "Vice-Présidente", image: "👩🏿‍💼" },
     { name: "Yao N'Guessan", role: "Secrétaire", image: "👨🏿‍💻" }
   ];
+
+  // Map simple FR -> key -> t.about.roles[key]
+  const roleKeyMap = {
+    "Président": "president",
+    "Vice-Présidente": "vicePresident",
+    "Secrétaire": "secretary"
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-20">
@@ -68,13 +75,17 @@ const APropos = ({ t }) => {
 
         {/* Team Section */}
         <div className="mt-20 text-center">
-          <h2 className="text-4xl font-bold text-gray-800 mb-12">Notre Équipe</h2>
+          <h2 className="text-4xl font-bold text-gray-800 mb-12">
+            {t.about.teamTitle}
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
                 <div className="text-6xl mb-4">{member.image}</div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                <p className="text-orange-600 font-medium">{member.role}</p>
+                <p className="text-orange-600 font-medium">
+                  {t.about.roles?.[roleKeyMap[member.role]] ?? member.role}
+                </p>
               </div>
             ))}
           </div>

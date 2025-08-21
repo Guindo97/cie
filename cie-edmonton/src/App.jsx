@@ -6,25 +6,22 @@ import Evenements from './components/Evenements';
 import Services from './components/Services';
 import Galerie from './components/Galerie';
 import Contact from './components/Contact';
-import { translations } from './utils/translations';
+import { translations } from './utils/translations.js';
 import './App.css';
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [language, setLanguage] = useState('fr');
 
-  // Charger langue sauvegardée
   useEffect(() => {
     const saved = localStorage.getItem('lang');
     if (saved) setLanguage(saved);
   }, []);
 
-  // Sauver langue
   useEffect(() => {
     localStorage.setItem('lang', language);
   }, [language]);
 
-  // Scroll to top à chaque "changement de page"
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
@@ -35,9 +32,9 @@ const App = () => {
     switch (currentPage) {
       case 'home': return <Accueil t={t} setCurrentPage={setCurrentPage} />;
       case 'about': return <APropos t={t} />;
-      case 'events': return <Evenements t={t} />;
-      case 'services': return <Services t={t} />;
-      case 'gallery': return <Galerie />;
+      case 'events': return <Evenements t={t} language={language} />;
+      case 'services': return <Services t={t} language={language} />;
+      case 'gallery': return <Galerie t={t} />;
       case 'contact': return <Contact t={t} />;
       default: return <Accueil t={t} setCurrentPage={setCurrentPage} />;
     }

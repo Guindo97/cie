@@ -1,32 +1,79 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+/** Petit composant compteur animé (entier uniquement) */
+const Counter = ({ end = 0, duration = 1200, suffix = "" }) => {
+  const [value, setValue] = useState(0);
+  const ref = useRef(null);
+  const startedRef = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const start = () => {
+      if (startedRef.current) return; // éviter plusieurs démarrages
+      startedRef.current = true;
+
+      const startTime = performance.now();
+      const animate = (now) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const current = Math.round(progress * end);
+        setValue(current);
+        if (progress < 1) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    };
+
+    // Lance l'animation quand visible
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          start();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [end, duration]);
+
+  return (
+    <span ref={ref}>
+      {value}
+      {suffix}
+    </span>
+  );
+};
 
 const Accueil = ({ t, setCurrentPage }) => {
+  // Deux cartes avec compteur (1 et 4), 24 et 8 restent statiques
   const stats = [
-    { number: "250+", label: t.home.stats.members, icon: "fas fa-users" },
-    { number: "24", label: t.home.stats.events, icon: "fas fa-calendar-alt" },
-    { number: "8", label: t.home.stats.years, icon: "fas fa-clock" },
-    { number: "150+", label: t.home.stats.families, icon: "fas fa-home" }
+    { type: 'counter', end: 250, suffix: '+', label: t.home.stats.members, icon: 'fas fa-users' },
+    { type: 'static', text: '24', label: t.home.stats.events, icon: 'fas fa-calendar-alt' },
+    { type: 'static', text: '8', label: t.home.stats.years, icon: 'fas fa-clock' },
+    { type: 'counter', end: 160, suffix: '+', label: t.home.stats.families, icon: 'fas fa-home' },
   ];
 
   const features = [
     {
-      icon: "fas fa-drum",
+      icon: 'fas fa-drum',
       title: t.home.features.culture.title,
       desc: t.home.features.culture.desc,
-      color: "from-orange-500 to-red-500"
+      color: 'from-orange-500 to-red-500',
     },
     {
-      icon: "fas fa-handshake",
+      icon: 'fas fa-handshake',
       title: t.home.features.integration.title,
       desc: t.home.features.integration.desc,
-      color: "from-green-500 to-emerald-500"
+      color: 'from-green-500 to-emerald-500',
     },
     {
-      icon: "fas fa-heart",
+      icon: 'fas fa-heart',
       title: t.home.features.community.title,
       desc: t.home.features.community.desc,
-      color: "from-blue-500 to-purple-500"
-    }
+      color: 'from-blue-500 to-purple-500',
+    },
   ];
 
   return (
@@ -79,11 +126,22 @@ const Accueil = ({ t, setCurrentPage }) => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center card-hover bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-lg">
+              <div
+                key={index}
+                className="text-center card-hover bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-lg"
+              >
                 <div className="text-4xl text-orange-500 mb-4">
                   <i className={stat.icon}></i>
                 </div>
-                <div className="text-3xl font-bold text-gray-800 mb-2">{stat.number}</div>
+
+                <div className="text-3xl font-bold text-gray-800 mb-2">
+                  {stat.type === 'counter' ? (
+                    <Counter end={stat.end} suffix={stat.suffix} />
+                  ) : (
+                    stat.text
+                  )}
+                </div>
+
                 <div className="text-gray-600 font-medium">{stat.label}</div>
               </div>
             ))}
@@ -95,17 +153,28 @@ const Accueil = ({ t, setCurrentPage }) => {
       <div className="py-20 bg-gradient-to-br from-orange-50 to-green-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Pourquoi nous rejoindre ?</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">{t.home.description}</p>
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+              {t.home.whyJoin}
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              {t.home.description}
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
-                <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center text-white text-2xl shadow-lg`}>
+              <div
+                key={index}
+                className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center"
+              >
+                <div
+                  className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center text-white text-2xl shadow-lg`}
+                >
                   <i className={feature.icon}></i>
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-4">{feature.title}</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
               </div>
             ))}

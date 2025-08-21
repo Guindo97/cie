@@ -24,7 +24,7 @@ const Contact = ({ t }) => {
     {
       icon: "fas fa-envelope",
       title: "Email",
-      content: t.contact.email,
+      content: t.contact.email, // reste FR côté EN comme voulu
       color: "text-blue-500"
     },
     {
@@ -58,7 +58,9 @@ const Contact = ({ t }) => {
           {/* Contact Information */}
           <div>
             <div className="bg-white p-8 rounded-2xl shadow-xl mb-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-8">Informations de contact</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-8">
+                {t.contact.sectionTitles?.info || "Informations de contact"}
+              </h2>
               <div className="space-y-6">
                 {contactInfo.map((info, index) => (
                   <div key={index} className="flex items-start space-x-4">
@@ -76,7 +78,9 @@ const Contact = ({ t }) => {
 
             {/* Social Media */}
             <div className="bg-white p-8 rounded-2xl shadow-xl">
-              <h3 className="text-xl font-bold text-gray-800 mb-6">Suivez-nous</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-6">
+                {t.contact.sectionTitles?.follow || "Suivez-nous"}
+              </h3>
               <div className="flex space-x-4">
                 {socialMedia.map((social, index) => (
                   <button
@@ -94,7 +98,9 @@ const Contact = ({ t }) => {
 
           {/* Contact Form */}
           <div className="bg-white p-8 rounded-2xl shadow-xl">
-            <h2 className="text-2xl font-bold text-gray-800 mb-8">Envoyez-nous un message</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-8">
+              {t.contact.form.titleBox}
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-gray-700 font-medium mb-2">

@@ -1,88 +1,70 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const Evenements = ({ t }) => {
-  // ⚙️ Données d'événements (tu peux les modifier librement)
+const Evenements = ({ t, language = 'fr' }) => {
+  const L = language === 'en' ? 'en' : 'fr';
+
   const upcomingEvents = [
     {
-      title: "Fête de l'Indépendance 2024",
-      date: "7 août 2024",
-      time: "18h00 - 23h00",
-      location: "Centre communautaire d'Edmonton",
-      description: "Célébration de l'indépendance de la Côte d'Ivoire avec spectacles, cuisine traditionnelle et danses.",
+      title: { fr: "Fête de l'Indépendance 2024", en: "Independence Day Celebration 2024" },
+      date:  { fr: "7 août 2024",                 en: "August 7, 2024" },
+      time:  { fr: "18h00 - 23h00",               en: "6:00 PM – 11:00 PM" },
+      location: {
+        fr: "Centre communautaire d'Edmonton",
+        en: "Edmonton Community Centre"
+      },
+      description: {
+        fr: "Célébration de l'indépendance de la Côte d'Ivoire avec spectacles, cuisine traditionnelle et danses.",
+        en: "Celebration of Côte d'Ivoire's independence with shows, traditional food and dances."
+      },
       image: "🎉",
-      price: "Gratuit"
+      price: { fr: "Gratuit", en: "Free" }
     },
     {
-      title: "Soirée Culturelle Automne",
-      date: "15 septembre 2024",
-      time: "19h00 - 22h00",
-      location: "Salle des fêtes Alberta",
-      description: "Soirée dédiée à la culture ivoirienne avec contes, musique et dégustation.",
+      title: { fr: "Soirée Culturelle Automne", en: "Autumn Cultural Night" },
+      date:  { fr: "15 septembre 2024",        en: "September 15, 2024" },
+      time:  { fr: "19h00 - 22h00",            en: "7:00 PM – 10:00 PM" },
+      location: { fr: "Salle des fêtes Alberta", en: "Alberta Hall" },
+      description: {
+        fr: "Soirée dédiée à la culture ivoirienne avec contes, musique et dégustation.",
+        en: "An evening dedicated to Ivorian culture with storytelling, music, and tasting."
+      },
       image: "🎭",
-      price: "15$ CAD"
+      price: { fr: "15$ CAD", en: "CAD $15" }
     },
     {
-      title: "Atelier Cuisine Ivoirienne",
-      date: "22 octobre 2024",
-      time: "14h00 - 17h00",
-      location: "École culinaire d'Edmonton",
-      description: "Apprenez à préparer les plats traditionnels ivoiriens avec nos chefs.",
+      title: { fr: "Atelier Cuisine Ivoirienne", en: "Ivorian Cooking Workshop" },
+      date:  { fr: "22 octobre 2024",            en: "October 22, 2024" },
+      time:  { fr: "14h00 - 17h00",              en: "2:00 PM – 5:00 PM" },
+      location: { fr: "École culinaire d'Edmonton", en: "Edmonton Culinary School" },
+      description: {
+        fr: "Apprenez à préparer les plats traditionnels ivoiriens avec nos chefs.",
+        en: "Learn to prepare traditional Ivorian dishes with our chefs."
+      },
       image: "👩‍🍳",
-      price: "25$ CAD"
+      price: { fr: "25$ CAD", en: "CAD $25" }
     }
   ];
 
   const pastEvents = [
     {
-      title: "Journée Portes Ouvertes",
-      date: "12 mai 2024",
-      participants: "85 personnes",
+      title: { fr: "Journée Portes Ouvertes", en: "Open House Day" },
+      date:  { fr: "12 mai 2024",            en: "May 12, 2024" },
+      participants: { fr: "85 personnes",    en: "85 attendees" },
       image: "🏠"
     },
     {
-      title: "Festival de Pâques",
-      date: "31 mars 2024",
-      participants: "120 personnes",
+      title: { fr: "Festival de Pâques",     en: "Easter Festival" },
+      date:  { fr: "31 mars 2024",           en: "March 31, 2024" },
+      participants: { fr: "120 personnes",   en: "120 attendees" },
       image: "🐰"
     },
     {
-      title: "Gala de Fin d'Année",
-      date: "16 décembre 2023",
-      participants: "200 personnes",
+      title: { fr: "Gala de Fin d'Année",    en: "Year-End Gala" },
+      date:  { fr: "16 décembre 2023",       en: "December 16, 2023" },
+      participants: { fr: "200 personnes",   en: "200 attendees" },
       image: "✨"
     }
   ];
-
-  // 🧠 State du formulaire modal
-  const [open, setOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-
-  const INTERAC_NUMBER = "+1 (780) 720-3996"; // ← Ton numéro Interac
-
-  const openForm = (eventTitle) => {
-    setSelectedEvent(eventTitle);
-    setOpen(true);
-  };
-
-  const closeForm = () => {
-    setOpen(false);
-    setFirstName("");
-    setLastName("");
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Ici tu pourrais envoyer à une API, Google Sheet, EmailJS, etc.
-    alert(
-      `${t.events.form.success}\n\n` +
-      `${t.events.form.summaryName}: ${firstName} ${lastName}\n` +
-      `${t.events.form.summaryEvent}: ${selectedEvent}\n` +
-      `${t.events.form.summaryPayment}: ${INTERAC_NUMBER}`
-    );
-    closeForm();
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-green-50 py-20">
@@ -107,29 +89,26 @@ const Evenements = ({ t }) => {
               <div key={index} className="card-hover bg-white rounded-2xl shadow-xl overflow-hidden">
                 <div className="bg-gradient-to-r from-orange-500 to-green-500 p-6 text-center">
                   <div className="text-6xl mb-4">{event.image}</div>
-                  <div className="text-white font-bold text-lg">{event.price}</div>
+                  <div className="text-white font-bold text-lg">{event.price[L]}</div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-800 mb-3">{event.title}</h3>
+                  <h3 className="text-xl font-bold text-gray-800 mb-3">{event.title[L]}</h3>
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-gray-600">
                       <i className="fas fa-calendar text-orange-500 w-5"></i>
-                      <span className="ml-2">{event.date}</span>
+                      <span className="ml-2">{event.date[L]}</span>
                     </div>
                     <div className="flex items-center text-gray-600">
                       <i className="fas fa-clock text-green-500 w-5"></i>
-                      <span className="ml-2">{event.time}</span>
+                      <span className="ml-2">{event.time[L]}</span>
                     </div>
                     <div className="flex items-center text-gray-600">
                       <i className="fas fa-map-marker-alt text-blue-500 w-5"></i>
-                      <span className="ml-2">{event.location}</span>
+                      <span className="ml-2">{event.location[L]}</span>
                     </div>
                   </div>
-                  <p className="text-gray-600 mb-6 leading-relaxed">{event.description}</p>
-                  <button
-                    onClick={() => openForm(event.title)}
-                    className="w-full bg-gradient-to-r from-orange-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
-                  >
+                  <p className="text-gray-600 mb-6 leading-relaxed">{event.description[L]}</p>
+                  <button className="w-full bg-gradient-to-r from-orange-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                     <i className="fas fa-ticket-alt mr-2"></i>
                     {t.events.register}
                   </button>
@@ -149,116 +128,14 @@ const Evenements = ({ t }) => {
             {pastEvents.map((event, index) => (
               <div key={index} className="card-hover bg-white p-6 rounded-2xl shadow-lg text-center">
                 <div className="text-4xl mb-4">{event.image}</div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2">{event.title}</h3>
-                <p className="text-gray-600 mb-2">{event.date}</p>
-                <p className="text-orange-600 font-semibold">{event.participants}</p>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">{event.title[L]}</h3>
+                <p className="text-gray-600 mb-2">{event.date[L]}</p>
+                <p className="text-orange-600 font-semibold">{event.participants[L]}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      {/* MODAL Formulaire d'inscription */}
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* overlay */}
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={closeForm}
-            aria-hidden="true"
-          />
-          {/* modal */}
-          <div className="relative z-10 w-full max-w-xl mx-4">
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-              <div className="bg-gradient-to-r from-orange-500 to-green-500 px-6 py-4 text-white flex items-center justify-between">
-                <h3 className="text-lg font-semibold">
-                  {t.events.form.title}
-                </h3>
-                <button
-                  onClick={closeForm}
-                  className="text-white/90 hover:text-white"
-                  aria-label={t.events.form.close}
-                >
-                  <i className="fas fa-times text-xl" />
-                </button>
-              </div>
-
-              <form onSubmit={handleSubmit} className="p-6 space-y-5">
-                {/* Nom */}
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-2">
-                      {t.events.form.lastName}
-                    </label>
-                    <input
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-2">
-                      {t.events.form.firstName}
-                    </label>
-                    <input
-                      type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Événement (pré-rempli) */}
-                <div>
-                  <label className="block text-gray-700 font-medium mb-2">
-                    {t.events.form.eventName}
-                  </label>
-                  <input
-                    type="text"
-                    value={selectedEvent}
-                    readOnly
-                    className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl"
-                  />
-                </div>
-
-                {/* Paiement Interac */}
-                <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-4">
-                  <h4 className="font-semibold text-gray-800 mb-1 flex items-center">
-                    <i className="fas fa-money-check-alt text-green-500 mr-2" />
-                    {t.events.form.paymentTitle}
-                  </h4>
-                  <p className="text-gray-600">
-                    {t.events.form.paymentDesc}{" "}
-                    <span className="font-semibold text-gray-800">{INTERAC_NUMBER}</span>.
-                  </p>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center justify-end gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={closeForm}
-                    className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700"
-                  >
-                    {t.events.form.cancel}
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-green-500 text-white font-semibold hover:shadow-lg"
-                  >
-                    <i className="fas fa-paper-plane mr-2" />
-                    {t.events.form.submit}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
