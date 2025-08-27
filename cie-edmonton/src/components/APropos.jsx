@@ -1,3 +1,4 @@
+// src/components/APropos.jsx
 import React from 'react';
 
 const APropos = ({ t }) => {
@@ -29,12 +30,11 @@ const APropos = ({ t }) => {
   ];
 
   const teamMembers = [
-    { name: "Ambroise Gnohan", role: "Président", image: "👨🏿‍💼" },
-    { name: "Edith N'Takpé", role: "Vice-Présidente", image: "👩🏿‍💼" },
-    { name: "Ange Kouadio", role: "Secrétaire", image: "👨🏿‍💻" }
+    { name: "Ambroise Gnohan", role: "Président", image: "/img/president.jpg", isPhoto: true },
+    { name: "Edith N'Takpé", role: "Vice-Présidente", image: "👩🏿‍💼", isPhoto: false },
+    { name: "Ange Kouadio", role: "Secrétaire", image: "👨🏿‍💻", isPhoto: false }
   ];
 
-  // Map simple FR -> key -> t.about.roles[key]
   const roleKeyMap = {
     "Président": "president",
     "Vice-Présidente": "vicePresident",
@@ -81,7 +81,15 @@ const APropos = ({ t }) => {
           <div className="grid md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
-                <div className="text-6xl mb-4">{member.image}</div>
+                {member.isPhoto ? (
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-32 h-32 mx-auto rounded-full mb-4 object-cover shadow-lg"
+                  />
+                ) : (
+                  <div className="text-6xl mb-4">{member.image}</div>
+                )}
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
                 <p className="text-orange-600 font-medium">
                   {t.about.roles?.[roleKeyMap[member.role]] ?? member.role}
