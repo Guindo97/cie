@@ -83,6 +83,7 @@ const Accueil = ({ t, language, setCurrentPage }) => {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="max-w-7xl mx-auto px-4 py-20 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Texte gauche */}
             <div className="text-center lg:text-left">
               <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-shadow leading-tight">
                 {t.home.title}
@@ -108,11 +109,24 @@ const Accueil = ({ t, language, setCurrentPage }) => {
               </div>
             </div>
 
+            {/* Visuel droite */}
             <div className="text-center">
               <div className="relative">
+                {/* Cercle CI */}
                 <div className="w-80 h-80 mx-auto flag-gradient rounded-full animate-float shadow-2xl flex items-center justify-center">
-                  <span className="text-8xl animate-pulse-slow">🇨🇮</span>
+                  <span className="text-8xl animate-pulse-slow">CI</span>
                 </div>
+
+                {/* Nouveau cercle logo CICE */}
+                <div className="hidden sm:flex absolute -right-10 top-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-white/90 backdrop-blur shadow-2xl items-center justify-center animate-float-delay">
+                  <img
+                    src="/img/logocice.png"
+                    alt="Logo CICE"
+                    className="w-59 h-59 object-cover rounded-full ring-4 ring-white/80"
+                  />
+                </div>
+
+                {/* Bulles décoratives */}
                 <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-ping"></div>
                 <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/30 rounded-full animate-pulse"></div>
               </div>

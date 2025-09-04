@@ -59,3 +59,9 @@
 .mobile-menu.open {
   transform: translateX(0);
 }
+
+/* ➕ Animation flottante décalée pour le logo */
+.animate-float-delay {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
