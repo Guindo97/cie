@@ -113,18 +113,23 @@ const Accueil = ({ t, language, setCurrentPage }) => {
             <div className="text-center">
               <div className="relative">
                 {/* Cercle CI */}
-                <div className="w-60 h-60 mx-auto flag-gradient rounded-full animate-float shadow-2xl flex items-center justify-center">
-                  <span className="text-8xl animate-pulse-slow">CI</span>
+                <div className="w-72 h-72 mx-auto flag-gradient rounded-full animate-float shadow-2xl flex items-center justify-center">
+                  <span className="text-9xl animate-pulse-slow">CI</span>
                 </div>
 
-                {/* Nouveau cercle logo CICE */}
-                <div className="hidden sm:flex absolute -right-10 top-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-white/90 backdrop-blur shadow-2xl items-center justify-center animate-float-delay">
-                  <img
-                    src="/img/logocice.png"
-                    alt="Logo CICE"
-                    className="w-59 h-59 object-cover rounded-full ring-4 ring-white/80"
-                  />
-                </div>
+                {/* Logo CICE — plus gros */}
+                <img
+                  src="/img/logocice.png"
+                  alt="Logo CICE"
+                  className="
+                    absolute right-4 top-6
+                    sm:right-10 sm:top-1/2 sm:-translate-y-1/2
+                    w-28 h-28 sm:w-48 sm:h-48
+                    rounded-full object-cover bg-white
+                    ring-4 ring-white/80 shadow-2xl
+                    animate-float z-20
+                  "
+                />
 
                 {/* Bulles décoratives */}
                 <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-ping"></div>
