@@ -113,7 +113,7 @@ const Accueil = ({ t, language, setCurrentPage }) => {
             <div className="text-center">
               <div className="relative">
                 {/* Cercle CI */}
-                <div className="w-80 h-80 mx-auto flag-gradient rounded-full animate-float shadow-2xl flex items-center justify-center">
+                <div className="w-60 h-60 mx-auto flag-gradient rounded-full animate-float shadow-2xl flex items-center justify-center">
                   <span className="text-8xl animate-pulse-slow">CI</span>
                 </div>
 
