@@ -45,11 +45,89 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
   }, [selectedMedia, selectedMediaIndex, media]);
 
   const loadMedia = async () => {
-    const eventIdentifier = event.id || event.key;
-    console.log('Chargement des médias pour:', eventIdentifier, eventType);
-    const eventMedia = await dataManager.getEventMedia(eventIdentifier, eventType);
-    console.log('Médias trouvés:', eventMedia);
-    setMedia(eventMedia);
+    // Utiliser la clé de l'événement en priorité, puis l'ID
+    const eventIdentifier = event.key || event.id;
+    console.log('🔍 EventGallery - Chargement des médias pour:', eventIdentifier, eventType);
+    console.log('🔍 EventGallery - Event complet:', event);
+    
+    try {
+      // Diagnostic : lister tous les médias dans la base
+      if (dataManager.useIndexedDB && dataManager.indexedDBReady) {
+        const allMedia = await indexedDBManager.getAllMedia();
+        console.log('🔍 EventGallery - Diagnostic: Tous les médias dans IndexedDB:', allMedia);
+      }
+      
+      // Charger les médias dynamiques
+      let eventMedia = await dataManager.getEventMedia(eventIdentifier, eventType);
+      console.log('✅ EventGallery - Médias dynamiques trouvés avec type', eventType, ':', eventMedia);
+      
+      // Si aucun média trouvé avec le type spécifié, essayer avec d'autres types et clés
+      if (!eventMedia || eventMedia.length === 0) {
+        console.log('⚠️ EventGallery - Aucun média trouvé avec le type', eventType, ', essai avec d\'autres types et clés');
+        
+        // Essayer avec 'upcoming' si on était sur 'past'
+        if (eventType === 'past') {
+          eventMedia = await dataManager.getEventMedia(eventIdentifier, 'upcoming');
+          console.log('✅ EventGallery - Médias trouvés avec type upcoming:', eventMedia);
+        }
+        
+        // Essayer avec 'gallery' si c'est un événement de galerie
+        if (!eventMedia || eventMedia.length === 0) {
+          eventMedia = await dataManager.getEventMedia(eventIdentifier, 'gallery');
+          console.log('✅ EventGallery - Médias trouvés avec type gallery:', eventMedia);
+        }
+        
+        // Essayer avec des clés alternatives pour le barbecue
+        if (!eventMedia || eventMedia.length === 0) {
+          const alternativeKeys = [];
+          if (eventIdentifier === 'barbecueAccueil') {
+            alternativeKeys.push('barbecueAccueil2025');
+          } else if (eventIdentifier === 'barbecueAccueil2025') {
+            alternativeKeys.push('barbecueAccueil');
+          }
+          
+          for (const altKey of alternativeKeys) {
+            console.log('🔍 EventGallery - Essai avec clé alternative:', altKey);
+            eventMedia = await dataManager.getEventMedia(altKey, eventType);
+            if (eventMedia && eventMedia.length > 0) {
+              console.log('✅ EventGallery - Médias trouvés avec clé alternative', altKey, ':', eventMedia);
+              break;
+            }
+            
+            // Essayer aussi avec d'autres types pour la clé alternative
+            if (eventType === 'past') {
+              eventMedia = await dataManager.getEventMedia(altKey, 'upcoming');
+              if (eventMedia && eventMedia.length > 0) {
+                console.log('✅ EventGallery - Médias trouvés avec clé alternative', altKey, 'et type upcoming:', eventMedia);
+                break;
+              }
+            }
+          }
+        }
+      }
+      
+      // Charger les médias statiques depuis les traductions
+      let staticMedia = [];
+      if (event.photos && Array.isArray(event.photos)) {
+        staticMedia = event.photos.map((photo, index) => ({
+          id: `static_${eventIdentifier}_${index}`,
+          type: 'image',
+          data: photo,
+          name: `Photo ${index + 1}`,
+          description: `Photo statique ${index + 1}`,
+          isStatic: true
+        }));
+        console.log('✅ EventGallery - Médias statiques trouvés:', staticMedia);
+      }
+      
+      // Combiner les médias dynamiques et statiques
+      const allMedia = [...(eventMedia || []), ...staticMedia];
+      console.log('✅ EventGallery - Total médias:', allMedia.length);
+      setMedia(allMedia);
+    } catch (error) {
+      console.error('❌ EventGallery - Erreur lors du chargement des médias:', error);
+      setMedia([]);
+    }
   };
 
   const handleLogin = (e) => {
@@ -184,7 +262,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
     }
     
     if (uploadData.file) {
-      const eventIdentifier = event.id || event.key;
+      const eventIdentifier = event.key || event.id;
       const mediaData = {
         type: uploadData.type,
         data: uploadData.data,
@@ -211,7 +289,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
   const handleDelete = async (mediaId) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce média ?')) {
       try {
-        const eventIdentifier = event.id || event.key;
+        const eventIdentifier = event.key || event.id;
         const success = await dataManager.deleteEventMedia(eventIdentifier, mediaId, eventType);
         
         if (success) {

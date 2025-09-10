@@ -64,8 +64,10 @@ const Galerie = ({ t }) => {
       participants: meta(eventKey).participants,
       description: meta(eventKey).description,
       image: meta(eventKey).image,
+      photos: meta(eventKey).photos || [], // Ajouter les photos statiques
       category: galleryItems.find(item => item.key === eventKey)?.category || 'events'
     };
+    console.log('🔍 Galerie - Ouverture EventGallery pour:', eventKey, 'Event:', event);
     setSelectedEvent(event);
     setShowEventGallery(true);
   };

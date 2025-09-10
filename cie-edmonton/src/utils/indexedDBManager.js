@@ -107,6 +107,22 @@ class IndexedDBManager {
     });
   }
 
+  // Lister tous les médias pour diagnostic
+  async getAllMedia() {
+    const db = await this.getDB();
+    const transaction = db.transaction(['media'], 'readonly');
+    const store = transaction.objectStore('media');
+    
+    return new Promise((resolve, reject) => {
+      const request = store.getAll();
+      request.onsuccess = () => {
+        console.log('🔍 IndexedDB - Tous les médias dans la base:', request.result);
+        resolve(request.result || []);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
   // Obtenir tous les médias d'un événement
   async getEventMedia(eventId, eventType = 'past') {
     const db = await this.getDB();
@@ -117,13 +133,34 @@ class IndexedDBManager {
     return new Promise((resolve, reject) => {
       const request = index.getAll(eventId);
       request.onsuccess = () => {
+        console.log('🔍 IndexedDB - Recherche médias pour:', eventId, eventType);
+        console.log('🔍 IndexedDB - Tous les médias trouvés:', request.result);
+        
         // Filtrer par type d'événement aussi
         const media = (request.result || []).filter(m => m.eventType === eventType);
+        console.log('🔍 IndexedDB - Médias filtrés par type:', media);
+        
+        // Si aucun média trouvé avec le type spécifié, essayer sans filtre
+        if (media.length === 0 && request.result && request.result.length > 0) {
+          console.log('⚠️ IndexedDB - Aucun média trouvé avec le type', eventType, ', essai sans filtre');
+          const allMedia = request.result || [];
+          console.log('🔍 IndexedDB - Tous les médias disponibles:', allMedia);
+          // Trier par date de création (plus récent en premier)
+          allMedia.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          console.log('✅ IndexedDB - Médias sans filtre:', allMedia);
+          resolve(allMedia);
+          return;
+        }
+        
         // Trier par date de création (plus récent en premier)
         media.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        console.log('✅ IndexedDB - Médias finaux:', media);
         resolve(media);
       };
-      request.onerror = () => reject(request.error);
+      request.onerror = () => {
+        console.error('❌ IndexedDB - Erreur lors de la récupération des médias:', request.error);
+        reject(request.error);
+      };
     });
   }
 
