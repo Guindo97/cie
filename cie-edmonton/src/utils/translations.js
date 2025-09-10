@@ -107,6 +107,17 @@ export const translations = {
               "Apprenez à préparer les plats traditionnels ivoiriens avec nos chefs.",
             image: "👩‍🍳",
             price: "25$ CAD"
+          },
+          {
+            key: "attiekeWomenDay",
+            title: "Journée spéciale Attiéké des femmes",
+            date: "15 novembre 2024",
+            time: "10h00 - 16h00",
+            location: "Centre communautaire d'Edmonton",
+            description:
+              "Célébration spéciale dédiée aux femmes avec dégustation d'attiéké et activités culturelles.",
+            image: "/img/attieke.jpg",
+            price: "Gratuit"
           }
         ],
         past: [
@@ -320,6 +331,17 @@ export const translations = {
               "Learn how to prepare traditional Ivorian dishes with our chefs.",
             image: "👩‍🍳",
             price: "CAD $25"
+          },
+          {
+            key: "attiekeWomenDay",
+            title: "Special Attiéké Women's Day",
+            date: "November 15, 2024",
+            time: "10:00 AM – 4:00 PM",
+            location: "Edmonton Community Centre",
+            description:
+              "Special celebration dedicated to women with attiéké tasting and cultural activities.",
+            image: "/img/attieke.jpg",
+            price: "Free"
           }
         ],
         past: [

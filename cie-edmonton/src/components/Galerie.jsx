@@ -133,13 +133,13 @@ const Galerie = ({ t }) => {
         </div>
 
         {/* Grille */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {itemsFiltered.map((item) => (
             <div
               key={item.key}
               className="card-hover bg-white rounded-2xl shadow-xl overflow-hidden"
             >
-     <div className="h-64 bg-gradient-to-br from-orange-200 via-white to-green-200 flex items-center justify-center relative overflow-hidden">
+     <div className="h-64 sm:h-80 bg-gradient-to-br from-orange-200 via-white to-green-200 flex items-center justify-center relative overflow-hidden">
        {/* Force l'affichage de l'image pour barbecueAccueil */}
        {item.key === 'barbecueAccueil' ? (
          <>

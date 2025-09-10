@@ -381,7 +381,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
               {media.map((mediaItem) => (
                 <div key={mediaItem.id} className="relative group">
                   <div
@@ -529,12 +529,12 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
             </div>
             
             {/* Contenu du lightbox */}
-            <div className="flex-1 flex items-center justify-center p-4 relative min-h-0">
+            <div className="flex-1 flex items-center justify-center p-2 sm:p-4 relative min-h-0">
               {/* Bouton précédent */}
               {media.length > 1 && (
                 <button
                   onClick={() => navigateMedia(-1)}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-75 transition-all z-10"
+                  className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 sm:p-3 rounded-full hover:bg-opacity-75 transition-all z-10"
                 >
                   <i className="fas fa-chevron-left text-xl"></i>
                 </button>
@@ -564,7 +564,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
               {media.length > 1 && (
                 <button
                   onClick={() => navigateMedia(1)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-75 transition-all z-10"
+                  className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 sm:p-3 rounded-full hover:bg-opacity-75 transition-all z-10"
                 >
                   <i className="fas fa-chevron-right text-xl"></i>
                 </button>
@@ -572,7 +572,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
               
               {/* Indicateur de position */}
               {media.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+                <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
                   {selectedMediaIndex + 1} / {media.length}
                 </div>
               )}

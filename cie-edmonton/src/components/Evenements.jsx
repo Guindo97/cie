@@ -255,10 +255,10 @@ const Evenements = ({ t }) => {
             <i className="fas fa-calendar-plus text-orange-500 mr-4"></i>
             {t.events.upcoming}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {upcomingEvents.map((event, index) => (
               <div key={event.key || event.id || index} className="card-hover bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div className="relative h-56 overflow-hidden bg-gradient-to-r from-orange-500 to-green-500">
+                <div className="relative h-48 sm:h-56 overflow-hidden bg-gradient-to-r from-orange-500 to-green-500">
                   {event.image && (event.image.startsWith('/img/') || event.image.startsWith('data:image/')) ? (
                     <img 
                       src={event.image} 
@@ -328,7 +328,7 @@ const Evenements = ({ t }) => {
             <i className="fas fa-history text-green-500 mr-4"></i>
             {t.events.past}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {pastEvents.map((event, index) => (
               <div key={event.key || event.id || index} className="card-hover bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div className="relative h-48 overflow-hidden bg-gradient-to-r from-orange-500 to-green-500">
