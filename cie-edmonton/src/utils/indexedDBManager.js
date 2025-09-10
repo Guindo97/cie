@@ -8,6 +8,14 @@ class IndexedDBManager {
 
   // Initialiser la base de données
   async init() {
+    // Vérifier le support d'IndexedDB
+    if (!window.indexedDB) {
+      console.error('IndexedDB n\'est pas supporté sur ce navigateur');
+      throw new Error('IndexedDB not supported');
+    }
+    
+    console.log('🔍 IndexedDB - Initialisation sur:', navigator.userAgent);
+    
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.dbVersion);
 

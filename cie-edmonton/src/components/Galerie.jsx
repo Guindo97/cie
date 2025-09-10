@@ -68,6 +68,8 @@ const Galerie = ({ t }) => {
       category: galleryItems.find(item => item.key === eventKey)?.category || 'events'
     };
     console.log('🔍 Galerie - Ouverture EventGallery pour:', eventKey, 'Event:', event);
+    console.log('🔍 Galerie - Photos statiques:', meta(eventKey).photos);
+    console.log('🔍 Galerie - Image:', meta(eventKey).image);
     setSelectedEvent(event);
     setShowEventGallery(true);
   };

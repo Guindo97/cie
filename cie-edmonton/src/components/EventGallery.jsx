@@ -52,9 +52,27 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
     
     try {
       // Diagnostic : lister tous les médias dans la base
+      console.log('🔍 EventGallery - Diagnostic complet:');
+      console.log('- dataManager.useIndexedDB:', dataManager.useIndexedDB);
+      console.log('- dataManager.indexedDBReady:', dataManager.indexedDBReady);
+      console.log('- eventIdentifier:', eventIdentifier);
+      console.log('- eventType:', eventType);
+      
       if (dataManager.useIndexedDB && dataManager.indexedDBReady) {
-        const allMedia = await indexedDBManager.getAllMedia();
-        console.log('🔍 EventGallery - Diagnostic: Tous les médias dans IndexedDB:', allMedia);
+        try {
+          const allMedia = await indexedDBManager.getAllMedia();
+          console.log('🔍 EventGallery - Diagnostic: Tous les médias dans IndexedDB:', allMedia);
+          
+          // Chercher spécifiquement les médias pour cet événement
+          const eventMediaInDB = allMedia.filter(m => 
+            m.eventId === eventIdentifier || 
+            m.eventId === 'barbecueAccueil' || 
+            m.eventId === 'barbecueAccueil2025'
+          );
+          console.log('🔍 EventGallery - Médias trouvés pour cet événement:', eventMediaInDB);
+        } catch (error) {
+          console.error('❌ EventGallery - Erreur lors du diagnostic IndexedDB:', error);
+        }
       }
       
       // Charger les médias dynamiques
@@ -102,6 +120,38 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                 break;
               }
             }
+          }
+        }
+        
+        // Fallback : essayer de charger depuis localStorage directement
+        if (!eventMedia || eventMedia.length === 0) {
+          console.log('⚠️ EventGallery - Fallback vers localStorage direct');
+          try {
+            const localStorageData = JSON.parse(localStorage.getItem('cie-edmonton-data') || '{}');
+            console.log('🔍 EventGallery - Données localStorage:', localStorageData);
+            
+            // Chercher dans tous les types d'événements
+            const allEvents = [
+              ...(localStorageData.events?.past || []),
+              ...(localStorageData.events?.upcoming || []),
+              ...(localStorageData.events?.gallery || [])
+            ];
+            
+            const foundEvent = allEvents.find(e => 
+              e.id === eventIdentifier || 
+              e.key === eventIdentifier ||
+              e.id === 'barbecueAccueil' || 
+              e.key === 'barbecueAccueil' ||
+              e.id === 'barbecueAccueil2025' || 
+              e.key === 'barbecueAccueil2025'
+            );
+            
+            if (foundEvent && foundEvent.media) {
+              eventMedia = foundEvent.media;
+              console.log('✅ EventGallery - Médias trouvés dans localStorage:', eventMedia);
+            }
+          } catch (error) {
+            console.error('❌ EventGallery - Erreur lors du fallback localStorage:', error);
           }
         }
       }
