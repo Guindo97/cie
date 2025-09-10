@@ -585,7 +585,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                   
                   {/* Bouton de suppression - seulement pour les admins */}
                   {isAdmin && (
-                    <div className="absolute top-2 right-2 z-10">
+                    <div className="absolute top-2 right-2 z-10 hidden sm:block">
                       <button
                         onClick={(e) => {
                           e.preventDefault();
@@ -599,7 +599,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                           console.log('🗑️ Bouton suppression touché pour:', mediaItem.id);
                           handleDelete(mediaItem.id);
                         }}
-                        className="bg-red-500 text-white p-3 sm:p-2 rounded-full hover:bg-red-600 active:bg-red-700 transition-colors shadow-lg opacity-90 hover:opacity-100 touch-manipulation"
+                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 active:bg-red-700 transition-colors shadow-lg opacity-90 hover:opacity-100 touch-manipulation"
                         title="Supprimer ce média"
                         style={{ 
                           minWidth: '44px', 
@@ -607,12 +607,12 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                           fontSize: '16px' // Éviter le zoom automatique sur iOS
                         }}
                       >
-                        <i className="fas fa-trash text-base sm:text-sm"></i>
+                        <i className="fas fa-trash text-sm"></i>
                       </button>
                     </div>
                   )}
                   
-                  {/* Bouton de suppression alternatif pour mobile - en bas à droite */}
+                  {/* Bouton de suppression pour mobile - en bas à droite */}
                   {isAdmin && (
                     <div className="absolute bottom-2 right-2 z-10 sm:hidden">
                       <button
