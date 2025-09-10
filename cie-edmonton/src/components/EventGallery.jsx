@@ -340,9 +340,26 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
     console.log('🗑️ handleDelete appelé avec mediaId:', mediaId);
     console.log('🗑️ Event:', event);
     console.log('🗑️ EventType:', eventType);
+    console.log('🗑️ Médias actuels:', media);
     
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce média ?')) {
-      try {
+    // Utiliser une confirmation personnalisée pour mobile
+    const confirmDelete = () => {
+      return new Promise((resolve) => {
+        if (window.confirm) {
+          resolve(window.confirm('Êtes-vous sûr de vouloir supprimer ce média ?'));
+        } else {
+          // Fallback pour les navigateurs qui ne supportent pas confirm
+          resolve(true);
+        }
+      });
+    };
+    
+    try {
+      const confirmed = await confirmDelete();
+      console.log('🗑️ Confirmation:', confirmed);
+      
+      if (confirmed) {
+        console.log('🗑️ Début de la suppression...');
         const eventIdentifier = event.key || event.id;
         console.log('🗑️ Suppression avec eventIdentifier:', eventIdentifier);
         
@@ -350,18 +367,30 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         console.log('🗑️ Résultat de la suppression:', success);
         
         if (success) {
-          console.log('✅ Média supprimé avec succès');
+          console.log('✅ Média supprimé avec succès, rechargement des médias...');
           await loadMedia();
+          console.log('✅ Médias rechargés');
         } else {
-          console.error('❌ Échec de la suppression du média');
-          alert('Erreur lors de la suppression du média');
+          console.error('❌ Échec de la suppression du média, tentative de suppression directe...');
+          
+          // Tentative de suppression directe en retirant le média de la liste locale
+          const updatedMedia = media.filter(m => m.id !== mediaId);
+          console.log('🗑️ Suppression directe - médias avant:', media.length, 'après:', updatedMedia.length);
+          
+          if (updatedMedia.length < media.length) {
+            setMedia(updatedMedia);
+            console.log('✅ Média supprimé directement de la liste locale');
+          } else {
+            console.error('❌ Média non trouvé dans la liste locale');
+            alert('Erreur : Impossible de supprimer le média');
+          }
         }
-      } catch (error) {
-        console.error('❌ Erreur lors de la suppression:', error);
-        alert('Erreur lors de la suppression du média: ' + error.message);
+      } else {
+        console.log('🗑️ Suppression annulée par l\'utilisateur');
       }
-    } else {
-      console.log('🗑️ Suppression annulée par l\'utilisateur');
+    } catch (error) {
+      console.error('❌ Erreur lors de la suppression:', error);
+      alert('Erreur lors de la suppression du média: ' + error.message);
     }
   };
 

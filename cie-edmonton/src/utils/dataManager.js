@@ -403,27 +403,52 @@ export class DataManager {
     const data = this.loadData();
     console.log('🗑️ Données localStorage:', data);
     
-    // Chercher par id ou par key
-    const eventIndex = data.events[eventType].findIndex(event => 
+    // Chercher dans tous les types d'événements si pas trouvé dans le type spécifié
+    let eventIndex = data.events[eventType].findIndex(event => 
       event.id === eventId || event.key === eventId
     );
     
-    console.log('🗑️ EventIndex trouvé:', eventIndex);
+    console.log('🗑️ EventIndex trouvé dans', eventType, ':', eventIndex);
+    
+    // Si pas trouvé, chercher dans les autres types
+    if (eventIndex === -1) {
+      console.log('🗑️ Recherche dans tous les types d\'événements...');
+      for (const type of ['upcoming', 'past', 'gallery']) {
+        eventIndex = data.events[type].findIndex(event => 
+          event.id === eventId || event.key === eventId
+        );
+        if (eventIndex !== -1) {
+          console.log('🗑️ Event trouvé dans', type, 'à l\'index', eventIndex);
+          eventType = type; // Mettre à jour le type
+          break;
+        }
+      }
+    }
+    
+    console.log('🗑️ EventIndex final:', eventIndex, 'dans', eventType);
     console.log('🗑️ Event trouvé:', eventIndex !== -1 ? data.events[eventType][eventIndex] : 'Aucun');
     
     if (eventIndex !== -1 && data.events[eventType][eventIndex].media) {
       const beforeCount = data.events[eventType][eventIndex].media.length;
+      console.log('🗑️ Médias avant suppression:', data.events[eventType][eventIndex].media);
+      
       data.events[eventType][eventIndex].media = data.events[eventType][eventIndex].media.filter(media => media.id !== mediaId);
       const afterCount = data.events[eventType][eventIndex].media.length;
       
+      console.log('🗑️ Médias après suppression:', data.events[eventType][eventIndex].media);
       console.log('🗑️ Médias avant suppression:', beforeCount, 'après:', afterCount);
       
-      this.saveData(data);
-      console.log('✅ Média supprimé de localStorage:', mediaId);
-      return true;
+      if (beforeCount !== afterCount) {
+        this.saveData(data);
+        console.log('✅ Média supprimé de localStorage:', mediaId);
+        return true;
+      } else {
+        console.log('❌ Média non trouvé dans la liste des médias');
+        return false;
+      }
     }
     
-    console.log('❌ Aucun média trouvé à supprimer');
+    console.log('❌ Aucun événement ou média trouvé à supprimer');
     return false;
   }
 
