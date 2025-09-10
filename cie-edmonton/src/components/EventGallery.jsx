@@ -442,11 +442,6 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
             <h2 className="text-xl sm:text-2xl font-bold">{event.title}</h2>
             <p className="text-orange-100 text-sm sm:text-base">
               Galerie des médias ({media.length} {media.length <= 1 ? 'média' : 'médias'})
-              {media.length >= 15 && (
-                <span className="text-yellow-300 ml-2">
-                  (Limite atteinte - 15 médias max)
-                </span>
-              )}
             </p>
           </div>
           <div className="flex space-x-2 w-full sm:w-auto">
@@ -454,20 +449,15 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
               <>
                 <button
                   onClick={() => setShowUpload(true)}
-                  disabled={media.length >= 20}
-                  className={`px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm sm:text-base flex-1 sm:flex-none ${
-                    media.length >= 20 
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                      : 'bg-white text-orange-500 hover:bg-orange-50'
-                  }`}
-                  title={media.length >= 20 ? 'Limite de 20 médias atteinte' : 'Ajouter un média'}
+                  className="px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm sm:text-base flex-1 sm:flex-none bg-white text-orange-500 hover:bg-orange-50"
+                  title="Ajouter un média"
                 >
                   <i className="fas fa-plus mr-1 sm:mr-2"></i>
                   <span className="hidden sm:inline">
-                    {media.length >= 20 ? 'Limite atteinte' : 'Ajouter'}
+                    Ajouter
                   </span>
                   <span className="sm:hidden">
-                    {media.length >= 20 ? '✗' : '+'}
+                    +
                   </span>
                 </button>
                 <button
