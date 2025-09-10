@@ -100,20 +100,20 @@ const Admin = ({ t, language, setCurrentPage }) => {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-green-50 py-20">
       <div className="max-w-7xl mx-auto px-4">
         {/* En-tête Admin */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-          <div className="flex justify-between items-center">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
             <div>
-              <h1 className="text-4xl font-bold gradient-text mb-2">Administration</h1>
-              <p className="text-gray-600">Gestion du contenu du site</p>
+              <h1 className="text-3xl sm:text-4xl font-bold gradient-text mb-2">Administration</h1>
+              <p className="text-gray-600 text-sm sm:text-base">Gestion du contenu du site</p>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-500">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+              <span className="text-xs sm:text-sm text-gray-500">
                 <i className="fas fa-user-shield mr-2"></i>
                 Connecté en tant qu'administrateur
               </span>
               <button
                 onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors"
+                className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors text-sm sm:text-base w-full sm:w-auto"
               >
                 <i className="fas fa-sign-out-alt mr-2"></i>
                 Déconnexion
