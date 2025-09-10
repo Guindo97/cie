@@ -110,6 +110,7 @@ export const translations = {
           }
         ],
         past: [
+          { key: "barbecueAccueil2025", title: "Barbecue d'accueil des nouveaux arrivants", date: "30 août 2024", participants: "90 personnes", image: "/img/1.jpg", description: "Célébration d'accueil pour les nouveaux arrivants ivoiriens à Edmonton avec réseautage, conseils d'insertion et partage d'expériences." },
           { key: "openHouseDay", title: "Journée Portes Ouvertes", date: "12 mai 2024", participants: "85 personnes", image: "🏠" },
           { key: "easterFestival", title: "Festival de Pâques", date: "31 mars 2024", participants: "120 personnes", image: "🐰" },
           { key: "yearEndGala", title: "Gala de Fin d'Année", date: "16 décembre 2023", participants: "200 personnes", image: "✨" }
@@ -162,22 +163,42 @@ export const translations = {
         commerce: "Commerce"
       },
       items: {
-        independence2023: { title: "Fête de l'Indépendance 2023" },
-        cookingWorkshop: { title: "Atelier Cuisine Traditionnelle" },
-        danceNight: { title: "Soirée Danse Ivoirienne" },
+        independence2023: { 
+          title: "Fête de l'Indépendance 2023",
+          image: "/img/happy.jpg"
+        },
+        cookingWorkshop: { 
+          title: "Atelier Cuisine Traditionnelle",
+          image: "/img/cuisine.webp"
+        },
+        danceNight: { 
+          title: "Soirée Danse Ivoirienne",
+          image: "/img/danse.png"
+        },
         generalAssembly: { title: "Assemblée Générale" },
         kidsFestival: { title: "Festival des Enfants" },
         weddingCeremony: { title: "Cérémonie de Mariage" },
         footballMatch: { title: "Match de Football" },
         musicConcert: { title: "Concert de Musique" },
-        africanMarket: { title: "Marché Africain" }
+        africanMarket: { 
+          title: "Marché Africain",
+          image: "/img/marché.jpg"
+        },
+        barbecueAccueil: { 
+          title: "Barbecue d'accueil des nouveaux arrivants",
+          date: "30 août 2024",
+          location: "Queen Mary Park, Edmonton",
+          participants: "90 personnes",
+          image: "/img/1.jpg",
+          photos: ["/img/1.jpg"]
+        }
       }
     },
     contact: {
       title: "Contactez-nous",
       subtitle: "Nous sommes à votre écoute",
       address: "Edmonton, Alberta, Canada",
-      email: "info@communaute-ivoirienne-edmonton.ca",
+      email: "bureaucice2022@gmail.com",
       phone: "+1 (780) 720-3996",
       sectionTitles: { info: "Informations de contact", follow: "Suivez-nous" },
       form: {
@@ -274,7 +295,7 @@ export const translations = {
             time: "6:00 PM – 11:00 PM",
             location: "Edmonton Community Centre",
             description:
-              "Celebrate Côte d’Ivoire’s Independence with performances, traditional cuisine, and dances.",
+              "Celebrate Côte d'Ivoire's Independence with performances, traditional cuisine, and dances.",
             image: "🎉",
             price: "Free"
           },
@@ -302,6 +323,7 @@ export const translations = {
           }
         ],
         past: [
+          { key: "barbecueAccueil2025", title: "Welcome BBQ for Newcomers", date: "August 30, 2024", participants: "90 people", image: "/img/1.jpg", description: "Welcome celebration for new Ivorian arrivals in Edmonton with networking, integration advice and experience sharing." },
           { key: "openHouseDay", title: "Open House Day", date: "May 12, 2024", participants: "85 people", image: "🏠" },
           { key: "easterFestival", title: "Easter Festival", date: "March 31, 2024", participants: "120 people", image: "🐰" },
           { key: "yearEndGala", title: "Year-End Gala", date: "December 16, 2023", participants: "200 people", image: "✨" }
@@ -354,15 +376,35 @@ export const translations = {
         commerce: "Commerce"
       },
       items: {
-        independence2023: { title: "Independence Day 2023" },
-        cookingWorkshop: { title: "Traditional Cooking Workshop" },
-        danceNight: { title: "Ivorian Dance Night" },
+        independence2023: { 
+          title: "Independence Day 2023",
+          image: "/img/happy.jpg"
+        },
+        cookingWorkshop: { 
+          title: "Traditional Cooking Workshop",
+          image: "/img/cuisine.webp"
+        },
+        danceNight: { 
+          title: "Ivorian Dance Night",
+          image: "/img/danse.png"
+        },
         generalAssembly: { title: "General Assembly" },
-        kidsFestival: { title: "Children’s Festival" },
+        kidsFestival: { title: "Children's Festival" },
         weddingCeremony: { title: "Wedding Ceremony" },
         footballMatch: { title: "Football Match" },
         musicConcert: { title: "Music Concert" },
-        africanMarket: { title: "African Market" }
+        africanMarket: { 
+          title: "African Market",
+          image: "/img/marché.jpg"
+        },
+        barbecueAccueil: { 
+          title: "Welcome BBQ for Newcomers",
+          date: "August 30, 2024",
+          location: "Queen Mary Park, Edmonton",
+          participants: "90 people",
+          image: "/img/1.jpg",
+          photos: ["/img/1.jpg"]
+        }
       }
     },
     contact: {
@@ -370,7 +412,7 @@ export const translations = {
       subtitle: "We are here to listen",
       address: "Edmonton, Alberta, Canada",
       // email FR conservé côté EN (souhaité)
-      email: "info@communaute-ivoirienne-edmonton.ca",
+      email: "bureaucice2022@gmail.com",
       phone: "+1 (780) 720-3996",
       sectionTitles: { info: "Contact Information", follow: "Follow us" },
       form: {

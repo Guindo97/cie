@@ -7,6 +7,7 @@ import Evenements from './components/Evenements';
 import Services from './components/Services';
 import Galerie from './components/Galerie';
 import Contact from './components/Contact';
+import Admin from './components/Admin';
 import { translations } from './utils/translations';
 import './App.css';
 
@@ -37,6 +38,7 @@ const App = () => {
       case 'services': return <Services t={t} language={language} />;
       case 'gallery': return <Galerie t={t} />;
       case 'contact': return <Contact t={t} />;
+      case 'admin': return <Admin t={t} language={language} setCurrentPage={setCurrentPage} />;
       default: return <Accueil t={t} language={language} setCurrentPage={setCurrentPage} />;
     }
   };

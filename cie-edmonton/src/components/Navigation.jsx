@@ -64,6 +64,16 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
 
             {/* === LANG + MENU === */}
             <div className="flex items-center space-x-4">
+              {/* Admin link (discret) */}
+              <button
+                onClick={() => setCurrentPage('admin')}
+                className="text-gray-400 hover:text-orange-500 p-2 transition-colors"
+                aria-label="Administration"
+                title="Administration"
+              >
+                <i className="fas fa-cog text-sm" aria-hidden="true"></i>
+              </button>
+
               {/* Switch langue */}
               <button
                 onClick={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
