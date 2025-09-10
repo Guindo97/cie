@@ -8,17 +8,33 @@ const Evenements = ({ t }) => {
   
   // Charger les événements depuis le dataManager
   useEffect(() => {
-    const loadEvents = () => {
-      // Nettoyer les doublons existants
-      dataManager.cleanDuplicates();
-      
-      // Initialiser les événements statiques dans le localStorage
-      if (t.events.items?.past) {
-        dataManager.initStaticEvents(t.events.items.past);
-      }
+  const loadEvents = () => {
+    // Nettoyer les doublons existants
+    dataManager.cleanDuplicates();
+    
+    // Initialiser les événements statiques dans le localStorage
+    if (t.events.items?.past) {
+      dataManager.initStaticEvents(t.events.items.past, 'past');
+    }
+    
+    // Initialiser les événements statiques upcoming
+    if (t.events.items?.upcoming) {
+      dataManager.initStaticEvents(t.events.items.upcoming, 'upcoming');
+    }
 
-      const upcoming = dataManager.getEvents('upcoming');
-      const past = dataManager.getEvents('past');
+    const upcoming = dataManager.getEvents('upcoming');
+    const past = dataManager.getEvents('past');
+    
+    // Diagnostic des doublons
+    console.log('🔍 DIAGNOSTIC DOUBLONS:');
+    console.log('Événements upcoming dans localStorage:', upcoming);
+    console.log('Événements upcoming statiques:', t.events.items?.upcoming);
+    
+    // Vérifier spécifiquement attiekeWomenDay
+    const attiekeInUpcoming = upcoming.filter(e => e.title?.includes('attiéké') || e.key === 'attiekeWomenDay');
+    const attiekeInStatic = t.events.items?.upcoming?.filter(e => e.title?.includes('attiéké') || e.key === 'attiekeWomenDay');
+    console.log('Attiéké dans upcoming localStorage:', attiekeInUpcoming);
+    console.log('Attiéké dans upcoming statique:', attiekeInStatic);
 
       // Combiner avec les événements statiques des traductions
       const staticUpcoming = t.events.items?.upcoming ?? [];
@@ -31,6 +47,7 @@ const Evenements = ({ t }) => {
       console.log('Recherche barbecueAccueil2025 dans past:', past.find(e => e.key === 'barbecueAccueil2025'));
       console.log('Recherche barbecueAccueil2025 dans staticPast:', staticPast.find(e => e.key === 'barbecueAccueil2025'));
 
+      // Utiliser directement les événements du localStorage (qui incluent déjà les statiques)
       // Mettre à jour les événements existants avec les nouvelles propriétés des traductions
       const updatedUpcoming = upcoming.map(dynamicEvent => {
         const staticEvent = staticUpcoming.find(staticEvent => 
@@ -49,24 +66,13 @@ const Evenements = ({ t }) => {
         return staticEvent ? { ...dynamicEvent, ...staticEvent } : dynamicEvent;
       });
 
-      // Ajouter les nouveaux événements statiques qui n'existent pas encore
-      const filteredStaticUpcoming = staticUpcoming.filter(staticEvent => 
-        !upcoming.some(dynamicEvent => 
-          dynamicEvent.key === staticEvent.key || dynamicEvent.id === staticEvent.key ||
-          (staticEvent.title === dynamicEvent.title && staticEvent.date === dynamicEvent.date)
-        )
-      );
-      
-      const filteredStaticPast = staticPast.filter(staticEvent => 
-        !past.some(dynamicEvent => 
-          dynamicEvent.key === staticEvent.key || dynamicEvent.id === staticEvent.key ||
-          (staticEvent.title === dynamicEvent.title && staticEvent.date === dynamicEvent.date)
-        )
-      );
+      // NE PAS ajouter d'événements statiques supplémentaires - ils sont déjà dans le localStorage
+      // Utiliser directement les événements mis à jour
+      console.log('Événements upcoming finaux:', updatedUpcoming);
+      console.log('Événements past finaux:', updatedPast);
 
       // Trier les événements passés du plus récent au plus ancien
-      const allPastEvents = [...updatedPast, ...filteredStaticPast];
-      const sortedPastEvents = allPastEvents.sort((a, b) => {
+      const sortedPastEvents = updatedPast.sort((a, b) => {
         // Extraire la date de l'événement
         const dateA = a.date || '';
         const dateB = b.date || '';
@@ -120,7 +126,7 @@ const Evenements = ({ t }) => {
         return dateB.localeCompare(dateA);
       });
 
-      setUpcomingEvents([...updatedUpcoming, ...filteredStaticUpcoming]);
+      setUpcomingEvents(updatedUpcoming);
       setPastEvents(sortedPastEvents);
     };
     

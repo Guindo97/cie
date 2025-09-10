@@ -39,18 +39,18 @@ export class DataManager {
   }
 
   // Initialiser les événements statiques dans le localStorage
-  initStaticEvents(staticEvents) {
+  initStaticEvents(staticEvents, eventType = 'past') {
     const data = this.loadData();
     let hasChanges = false;
 
     // Ajouter les événements statiques s'ils n'existent pas
     staticEvents.forEach(staticEvent => {
-      const existingEvent = data.events.past.find(event => 
+      const existingEvent = data.events[eventType].find(event => 
         event.key === staticEvent.key || event.id === staticEvent.key
       );
       
       if (!existingEvent) {
-        data.events.past.unshift({
+        data.events[eventType].unshift({
           ...staticEvent,
           media: []
         });
@@ -382,30 +382,48 @@ export class DataManager {
 
   // Supprimer un média d'un événement
   async deleteEventMedia(eventId, mediaId, eventType = 'past') {
+    console.log('🗑️ dataManager.deleteEventMedia appelé avec:', { eventId, mediaId, eventType });
+    console.log('🗑️ useIndexedDB:', this.useIndexedDB, 'indexedDBReady:', this.indexedDBReady);
+    
     // Utiliser IndexedDB si disponible
     if (this.useIndexedDB && this.indexedDBReady) {
       try {
+        console.log('🗑️ Tentative de suppression via IndexedDB...');
         await indexedDBManager.deleteMedia(mediaId);
-        console.log('Média supprimé de IndexedDB:', mediaId);
+        console.log('✅ Média supprimé de IndexedDB:', mediaId);
         return true;
       } catch (error) {
-        console.error('Erreur IndexedDB lors de la suppression, bascule vers localStorage:', error);
+        console.error('❌ Erreur IndexedDB lors de la suppression, bascule vers localStorage:', error);
         this.useIndexedDB = false;
       }
     }
     
     // Fallback vers localStorage
+    console.log('🗑️ Fallback vers localStorage...');
     const data = this.loadData();
+    console.log('🗑️ Données localStorage:', data);
+    
     // Chercher par id ou par key
     const eventIndex = data.events[eventType].findIndex(event => 
       event.id === eventId || event.key === eventId
     );
     
+    console.log('🗑️ EventIndex trouvé:', eventIndex);
+    console.log('🗑️ Event trouvé:', eventIndex !== -1 ? data.events[eventType][eventIndex] : 'Aucun');
+    
     if (eventIndex !== -1 && data.events[eventType][eventIndex].media) {
+      const beforeCount = data.events[eventType][eventIndex].media.length;
       data.events[eventType][eventIndex].media = data.events[eventType][eventIndex].media.filter(media => media.id !== mediaId);
+      const afterCount = data.events[eventType][eventIndex].media.length;
+      
+      console.log('🗑️ Médias avant suppression:', beforeCount, 'après:', afterCount);
+      
       this.saveData(data);
+      console.log('✅ Média supprimé de localStorage:', mediaId);
       return true;
     }
+    
+    console.log('❌ Aucun média trouvé à supprimer');
     return false;
   }
 
@@ -494,21 +512,62 @@ export class DataManager {
     const data = this.loadData();
     let hasChanges = false;
 
-    // Nettoyer les événements passés
-    const seenKeys = new Set();
-    const cleanedPast = data.events.past.filter(event => {
+    // Nettoyer les événements upcoming
+    const seenUpcomingKeys = new Set();
+    const cleanedUpcoming = data.events.upcoming.filter(event => {
       const key = event.key || event.id;
-      if (seenKeys.has(key)) {
+      if (seenUpcomingKeys.has(key)) {
         hasChanges = true;
+        console.log('Suppression doublon upcoming:', event.title);
         return false; // Supprimer le doublon
       }
-      seenKeys.add(key);
+      seenUpcomingKeys.add(key);
+      return true;
+    });
+
+    // Nettoyer les événements passés
+    const seenPastKeys = new Set();
+    const cleanedPast = data.events.past.filter(event => {
+      const key = event.key || event.id;
+      if (seenPastKeys.has(key)) {
+        hasChanges = true;
+        console.log('Suppression doublon past:', event.title);
+        return false; // Supprimer le doublon
+      }
+      seenPastKeys.add(key);
+      return true;
+    });
+
+    // Nettoyer aussi les doublons basés sur le titre et la date
+    const seenUpcomingTitles = new Set();
+    const finalCleanedUpcoming = cleanedUpcoming.filter(event => {
+      const titleDate = `${event.title}-${event.date}`;
+      if (seenUpcomingTitles.has(titleDate)) {
+        hasChanges = true;
+        console.log('Suppression doublon upcoming par titre/date:', event.title);
+        return false;
+      }
+      seenUpcomingTitles.add(titleDate);
+      return true;
+    });
+
+    const seenPastTitles = new Set();
+    const finalCleanedPast = cleanedPast.filter(event => {
+      const titleDate = `${event.title}-${event.date}`;
+      if (seenPastTitles.has(titleDate)) {
+        hasChanges = true;
+        console.log('Suppression doublon past par titre/date:', event.title);
+        return false;
+      }
+      seenPastTitles.add(titleDate);
       return true;
     });
 
     if (hasChanges) {
-      data.events.past = cleanedPast;
+      data.events.upcoming = finalCleanedUpcoming;
+      data.events.past = finalCleanedPast;
       this.saveData(data);
+      console.log('Doublons nettoyés dans localStorage');
     }
 
     return hasChanges;

@@ -337,22 +337,31 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
   };
 
   const handleDelete = async (mediaId) => {
+    console.log('🗑️ handleDelete appelé avec mediaId:', mediaId);
+    console.log('🗑️ Event:', event);
+    console.log('🗑️ EventType:', eventType);
+    
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce média ?')) {
       try {
         const eventIdentifier = event.key || event.id;
+        console.log('🗑️ Suppression avec eventIdentifier:', eventIdentifier);
+        
         const success = await dataManager.deleteEventMedia(eventIdentifier, mediaId, eventType);
+        console.log('🗑️ Résultat de la suppression:', success);
         
         if (success) {
-          console.log('Média supprimé avec succès');
+          console.log('✅ Média supprimé avec succès');
           await loadMedia();
         } else {
-          console.error('Échec de la suppression du média');
+          console.error('❌ Échec de la suppression du média');
           alert('Erreur lors de la suppression du média');
         }
       } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-        alert('Erreur lors de la suppression du média');
+        console.error('❌ Erreur lors de la suppression:', error);
+        alert('Erreur lors de la suppression du média: ' + error.message);
       }
+    } else {
+      console.log('🗑️ Suppression annulée par l\'utilisateur');
     }
   };
 
@@ -547,16 +556,54 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                   
                   {/* Bouton de suppression - seulement pour les admins */}
                   {isAdmin && (
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute top-2 right-2 z-10">
                       <button
                         onClick={(e) => {
+                          e.preventDefault();
                           e.stopPropagation();
+                          console.log('🗑️ Bouton suppression cliqué pour:', mediaItem.id);
                           handleDelete(mediaItem.id);
                         }}
-                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg opacity-80 hover:opacity-100"
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('🗑️ Bouton suppression touché pour:', mediaItem.id);
+                          handleDelete(mediaItem.id);
+                        }}
+                        className="bg-red-500 text-white p-3 sm:p-2 rounded-full hover:bg-red-600 active:bg-red-700 transition-colors shadow-lg opacity-90 hover:opacity-100 touch-manipulation"
                         title="Supprimer ce média"
+                        style={{ 
+                          minWidth: '44px', 
+                          minHeight: '44px',
+                          fontSize: '16px' // Éviter le zoom automatique sur iOS
+                        }}
                       >
-                        <i className="fas fa-trash text-sm"></i>
+                        <i className="fas fa-trash text-base sm:text-sm"></i>
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Bouton de suppression alternatif pour mobile - en bas à droite */}
+                  {isAdmin && (
+                    <div className="absolute bottom-2 right-2 z-10 sm:hidden">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('🗑️ Bouton suppression mobile cliqué pour:', mediaItem.id);
+                          handleDelete(mediaItem.id);
+                        }}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('🗑️ Bouton suppression mobile touché pour:', mediaItem.id);
+                          handleDelete(mediaItem.id);
+                        }}
+                        className="bg-red-600 text-white px-3 py-2 rounded-lg shadow-lg opacity-90 active:opacity-100 touch-manipulation"
+                        style={{ fontSize: '14px' }}
+                      >
+                        <i className="fas fa-trash mr-1"></i>
+                        Supprimer
                       </button>
                     </div>
                   )}
