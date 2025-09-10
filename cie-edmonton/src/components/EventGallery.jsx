@@ -583,8 +583,8 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                     </div>
                   </div>
                   
-                  {/* Bouton de suppression - seulement pour les admins */}
-                  {isAdmin && (
+                  {/* Bouton de suppression - seulement pour les admins et quand le modal n'est pas ouvert */}
+                  {isAdmin && !showUpload && (
                     <div className="absolute top-2 right-2 z-10 hidden sm:block">
                       <button
                         onClick={(e) => {
@@ -613,7 +613,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                   )}
                   
                   {/* Bouton de suppression pour mobile - en bas à droite */}
-                  {isAdmin && (
+                  {isAdmin && !showUpload && (
                     <div className="absolute bottom-2 right-2 z-10 sm:hidden">
                       <button
                         onClick={(e) => {
