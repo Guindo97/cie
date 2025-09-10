@@ -44,10 +44,30 @@ export const translations = {
       historyText:
         "Fondée en 2015 par un groupe de familles ivoiriennes passionnées, notre communauté a grandi pour devenir un pilier essentiel de la diaspora ivoirienne en Alberta.",
       teamTitle: "Notre Équipe",
+      teamSections: {
+        direction: "Direction",
+        secretariat: "Secrétariat",
+        finances: "Finances",
+        organisation: "Organisation",
+        jeunesse: "Jeunesse",
+        integration: "Intégration",
+        communication: "Communication & Femmes"
+      },
       roles: {
         president: "Président",
         vicePresident: "Vice-Présidente",
-        secretary: "Secrétaire"
+        secretary: "Secrétaire",
+        secretaryGeneral: "Secrétaire Générale",
+        secretaryGeneralAdjoint: "Secrétaire Générale Adjointe",
+        treasurer: "Trésorière / Responsable Comité des Adhésions",
+        auditor: "Commissaire aux comptes",
+        eventOrganizer: "Responsable Comité d'organisation des événements",
+        partnershipOrganizer: "Responsable Comité d'organisation des partenariats",
+        youthResponsible: "Responsable Comité de jeunesse",
+        integrationResponsible: "Responsable Comité d'intégration des nouveaux arrivants",
+        communicationResponsible: "Responsable Comité communication",
+        womenResponsible: "Responsable Comité des Femmes",
+        vacant: "Vacant"
       }
     },
     events: {
@@ -268,10 +288,30 @@ export const translations = {
       historyText:
         "Founded in 2015 by a group of passionate Ivorian families, our community has grown to become an essential pillar of the Ivorian diaspora in Alberta.",
       teamTitle: "Our Team",
+      teamSections: {
+        direction: "Leadership",
+        secretariat: "Secretariat",
+        finances: "Finances",
+        organisation: "Organization",
+        jeunesse: "Youth",
+        integration: "Integration",
+        communication: "Communication & Women"
+      },
       roles: {
         president: "President",
         vicePresident: "Vice President",
-        secretary: "Secretary"
+        secretary: "Secretary",
+        secretaryGeneral: "General Secretary",
+        secretaryGeneralAdjoint: "Deputy General Secretary",
+        treasurer: "Treasurer / Membership Committee Head",
+        auditor: "Auditor",
+        eventOrganizer: "Event Organization Committee Head",
+        partnershipOrganizer: "Partnership Organization Committee Head",
+        youthResponsible: "Youth Committee Head",
+        integrationResponsible: "Newcomer Integration Committee Head",
+        communicationResponsible: "Communication Committee Head",
+        womenResponsible: "Women's Committee Head",
+        vacant: "Vacant"
       }
     },
     events: {

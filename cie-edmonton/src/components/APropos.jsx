@@ -1,7 +1,7 @@
 // src/components/APropos.jsx
 import React from 'react';
 
-const APropos = ({ t }) => {
+const APropos = ({ t, language }) => {
   const sections = [
     {
       title: t.about.mission,
@@ -31,41 +31,36 @@ const APropos = ({ t }) => {
 
   const teamMembers = [
     // Direction
-    { name: "Ambroise Gnoan", role: "Président", image: "/img/president.jpg", isPhoto: true, category: "direction" },
-    { name: "Coulibaly Tchawa Zainab", role: "Vice-Présidente", image: "/img/vicepresidente.png", isPhoto: true, category: "direction" },
+    { name: "Ambroise Gnoan", roleKey: "president", image: "/img/president.jpg", isPhoto: true, category: "direction" },
+    { name: "Coulibaly Tchawa Zainab", roleKey: "vicePresident", image: "/img/vicepresidente.png", isPhoto: true, category: "direction" },
     
     // Secrétariat
-    { name: "KOUADIO Jessica Aka", role: "Secrétaire Générale", image: "👩🏿‍💼", isPhoto: false, category: "secretariat" },
-    { name: "YAPO Ursule Elodie", role: "Secrétaire Générale Adjointe", image: "👩🏿‍💼", isPhoto: false, category: "secretariat" },
+    { name: "KOUADIO Jessica Aka", roleKey: "secretaryGeneral", image: "👩🏿‍💼", isPhoto: false, category: "secretariat" },
+    { name: "YAPO Ursule Elodie", roleKey: "secretaryGeneralAdjoint", image: "👩🏿‍💼", isPhoto: false, category: "secretariat" },
     
     // Finances
-    { name: "KOUAKOU Nadége Élodie", role: "Trésorière / Responsable Comité des Adhésions", image: "👩🏿‍💼", isPhoto: false, category: "finances" },
-    { name: "TEAH Charles John", role: "Commissaire aux comptes", image: "👨🏿‍💼", isPhoto: false, category: "finances" },
+    { name: "KOUAKOU Nadége Élodie", roleKey: "treasurer", image: "👩🏿‍💼", isPhoto: false, category: "finances" },
+    { name: "TEAH Charles John", roleKey: "auditor", image: "👨🏿‍💼", isPhoto: false, category: "finances" },
     
     // Organisation
-    { name: "KABLAN Chantal", role: "Responsable Comité d'organisation des événements", image: "👩🏿‍💼", isPhoto: false, category: "organisation" },
-    { name: "AKE Colette", role: "Responsable Comité d'organisation des événements", image: "👩🏿‍💼", isPhoto: false, category: "organisation" },
-    { name: "Vacant", role: "Responsable Comité d'organisation des partenariats", image: "👤", isPhoto: false, category: "organisation" },
+    { name: "KABLAN Chantal", roleKey: "eventOrganizer", image: "👩🏿‍💼", isPhoto: false, category: "organisation" },
+    { name: "AKE Colette", roleKey: "eventOrganizer", image: "👩🏿‍💼", isPhoto: false, category: "organisation" },
+    { name: "Vacant", roleKey: "partnershipOrganizer", image: "👤", isPhoto: false, category: "organisation" },
     
     // Jeunesse
-    { name: "YATASSAGNE Adama", role: "Responsable Comité de jeunesse", image: "👨🏿‍💼", isPhoto: false, category: "jeunesse" },
-    { name: "KPOLO Oni Richard", role: "Responsable Comité de jeunesse", image: "👨🏿‍💼", isPhoto: false, category: "jeunesse" },
+    { name: "YATASSAGNE Adama", roleKey: "youthResponsible", image: "👨🏿‍💼", isPhoto: false, category: "jeunesse" },
+    { name: "KPOLO Oni Richard", roleKey: "youthResponsible", image: "👨🏿‍💼", isPhoto: false, category: "jeunesse" },
     
     // Intégration
-    { name: "KPOLO Oni Richard", role: "Responsable Comité d'intégration des nouveaux arrivants", image: "👨🏿‍💼", isPhoto: false, category: "integration" },
-    { name: "LOA Domy Fernand", role: "Responsable Comité d'intégration des nouveaux arrivants", image: "👨🏿‍💼", isPhoto: false, category: "integration" },
-    { name: "AKA Jean-Paul", role: "Responsable Comité d'intégration des nouveaux arrivants", image: "👨🏿‍💼", isPhoto: false, category: "integration" },
+    { name: "KPOLO Oni Richard", roleKey: "integrationResponsible", image: "👨🏿‍💼", isPhoto: false, category: "integration" },
+    { name: "LOA Domy Fernand", roleKey: "integrationResponsible", image: "👨🏿‍💼", isPhoto: false, category: "integration" },
+    { name: "AKA Jean-Paul", roleKey: "integrationResponsible", image: "👨🏿‍💼", isPhoto: false, category: "integration" },
     
     // Communication et Femmes
-    { name: "APPAOU Marcel", role: "Responsable Comité communication", image: "👨🏿‍💼", isPhoto: false, category: "communication" },
-    { name: "KOMENAN Nina", role: "Responsable Comité des Femmes", image: "👩🏿‍💼", isPhoto: false, category: "femmes" }
+    { name: "APPAOU Marcel", roleKey: "communicationResponsible", image: "👨🏿‍💼", isPhoto: false, category: "communication" },
+    { name: "KOMENAN Nina", roleKey: "womenResponsible", image: "👩🏿‍💼", isPhoto: false, category: "femmes" }
   ];
 
-  const roleKeyMap = {
-    "Président": "president",
-    "Vice-Présidente": "vicePresident",
-    "Secrétaire": "secretary"
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-20">
@@ -107,7 +102,7 @@ const APropos = ({ t }) => {
           
           {/* Direction */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-700 mb-8">Direction</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-8">{t.about.teamSections.direction}</h3>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {teamMembers.filter(member => member.category === "direction").map((member, index) => (
                 <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
@@ -126,7 +121,7 @@ const APropos = ({ t }) => {
                     <div className="text-6xl mb-4">{member.image}</div>
                   )}
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-medium">{member.role}</p>
+                  <p className="text-orange-600 font-medium">{t.about.roles[member.roleKey]}</p>
                 </div>
               ))}
             </div>
@@ -134,13 +129,13 @@ const APropos = ({ t }) => {
 
           {/* Secrétariat */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-700 mb-8">Secrétariat</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-8">{t.about.teamSections.secretariat}</h3>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {teamMembers.filter(member => member.category === "secretariat").map((member, index) => (
                 <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
                   <div className="text-6xl mb-4">{member.image}</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-medium">{member.role}</p>
+                  <p className="text-orange-600 font-medium">{t.about.roles[member.roleKey]}</p>
                 </div>
               ))}
             </div>
@@ -148,13 +143,13 @@ const APropos = ({ t }) => {
 
           {/* Finances */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-700 mb-8">Finances</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-8">{t.about.teamSections.finances}</h3>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {teamMembers.filter(member => member.category === "finances").map((member, index) => (
                 <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
                   <div className="text-6xl mb-4">{member.image}</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-medium">{member.role}</p>
+                  <p className="text-orange-600 font-medium">{t.about.roles[member.roleKey]}</p>
                 </div>
               ))}
             </div>
@@ -162,13 +157,13 @@ const APropos = ({ t }) => {
 
           {/* Organisation */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-700 mb-8">Organisation</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-8">{t.about.teamSections.organisation}</h3>
             <div className="grid md:grid-cols-3 gap-8">
               {teamMembers.filter(member => member.category === "organisation").map((member, index) => (
                 <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
                   <div className="text-6xl mb-4">{member.image}</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-medium">{member.role}</p>
+                  <p className="text-orange-600 font-medium">{t.about.roles[member.roleKey]}</p>
                 </div>
               ))}
             </div>
@@ -176,13 +171,13 @@ const APropos = ({ t }) => {
 
           {/* Jeunesse */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-700 mb-8">Jeunesse</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-8">{t.about.teamSections.jeunesse}</h3>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {teamMembers.filter(member => member.category === "jeunesse").map((member, index) => (
                 <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
                   <div className="text-6xl mb-4">{member.image}</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-medium">{member.role}</p>
+                  <p className="text-orange-600 font-medium">{t.about.roles[member.roleKey]}</p>
                 </div>
               ))}
             </div>
@@ -190,13 +185,13 @@ const APropos = ({ t }) => {
 
           {/* Intégration */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-700 mb-8">Intégration</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-8">{t.about.teamSections.integration}</h3>
             <div className="grid md:grid-cols-3 gap-8">
               {teamMembers.filter(member => member.category === "integration").map((member, index) => (
                 <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
                   <div className="text-6xl mb-4">{member.image}</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-medium">{member.role}</p>
+                  <p className="text-orange-600 font-medium">{t.about.roles[member.roleKey]}</p>
                 </div>
               ))}
             </div>
@@ -204,13 +199,13 @@ const APropos = ({ t }) => {
 
           {/* Communication et Femmes */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-700 mb-8">Communication & Femmes</h3>
+            <h3 className="text-2xl font-bold text-gray-700 mb-8">{t.about.teamSections.communication}</h3>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {teamMembers.filter(member => member.category === "communication" || member.category === "femmes").map((member, index) => (
                 <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-lg text-center">
                   <div className="text-6xl mb-4">{member.image}</div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-medium">{member.role}</p>
+                  <p className="text-orange-600 font-medium">{t.about.roles[member.roleKey]}</p>
                 </div>
               ))}
             </div>

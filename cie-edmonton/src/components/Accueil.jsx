@@ -1,6 +1,5 @@
 // src/components/Accueil.jsx
 import React, { useEffect, useRef, useState } from 'react';
-import Footer from './Footer'; // ← IMPORTANT: chemin correct
 
 /** Petit composant compteur animé (entier uniquement) */
 const Counter = ({ end = 0, duration = 1200, suffix = "" }) => {
@@ -200,9 +199,6 @@ const Accueil = ({ t, language, setCurrentPage }) => {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer t={t} language={language} setCurrentPage={setCurrentPage} />
     </div>
   );
 };

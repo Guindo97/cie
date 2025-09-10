@@ -8,6 +8,7 @@ import Services from './components/Services';
 import Galerie from './components/Galerie';
 import Contact from './components/Contact';
 import Admin from './components/Admin';
+import Footer from './components/Footer';
 import { translations } from './utils/translations';
 import './App.css';
 
@@ -33,7 +34,7 @@ const App = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'home': return <Accueil t={t} language={language} setCurrentPage={setCurrentPage} />;
-      case 'about': return <APropos t={t} />;
+      case 'about': return <APropos t={t} language={language} />;
       case 'events': return <Evenements t={t} language={language} />;
       case 'services': return <Services t={t} language={language} />;
       case 'gallery': return <Galerie t={t} />;
@@ -44,7 +45,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navigation
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
@@ -52,7 +53,14 @@ const App = () => {
         setLanguage={setLanguage}
         t={t}
       />
-      {renderPage()}
+      <div className="flex-1">
+        {renderPage()}
+      </div>
+      <Footer 
+        t={t} 
+        language={language} 
+        setCurrentPage={setCurrentPage} 
+      />
     </div>
   );
 };
