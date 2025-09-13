@@ -122,13 +122,32 @@ const Galerie = ({ t }) => {
 
   // Charger les images uploadées via Cloudinary
   useEffect(() => {
-    const loadUploadedImages = () => {
+    const loadUploadedImages = async () => {
       try {
-        const images = dataManager.getImages();
-        setUploadedImages(images);
-        console.log('✅ Galerie - Images Cloudinary chargées:', images.length);
+        // D'abord essayer de récupérer depuis le localStorage (pour la compatibilité)
+        const localImages = dataManager.getImages();
+        console.log('🔍 Galerie - Images locales:', localImages.length);
+        
+        // Ensuite, essayer de récupérer depuis Cloudinary directement
+        try {
+          const cloudinaryImages = await CloudinaryService.getImagesFromCloudinary();
+          console.log('🔍 Galerie - Images Cloudinary:', cloudinaryImages.length);
+          
+          // Combiner les images locales et Cloudinary, en priorisant Cloudinary
+          const allImages = [...cloudinaryImages, ...localImages.filter(local => 
+            !cloudinaryImages.some(cloud => cloud.public_id === local.public_id)
+          )];
+          
+          setUploadedImages(allImages);
+          console.log('✅ Galerie - Total images chargées:', allImages.length);
+        } catch (cloudinaryError) {
+          console.warn('⚠️ Impossible de récupérer depuis Cloudinary, utilisation du localStorage:', cloudinaryError);
+          setUploadedImages(localImages);
+          console.log('✅ Galerie - Images locales utilisées:', localImages.length);
+        }
       } catch (error) {
-        console.error('❌ Erreur chargement images Cloudinary:', error);
+        console.error('❌ Erreur chargement images:', error);
+        setUploadedImages([]);
       } finally {
         setLoading(false);
       }

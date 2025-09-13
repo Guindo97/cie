@@ -93,6 +93,51 @@ class CloudinaryService {
     }
   }
 
+  // Récupérer toutes les images depuis Cloudinary
+  static async getImagesFromCloudinary() {
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/resources/image?max_results=500&type=upload&prefix=cice-edmonton`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Basic ${btoa(`${CLOUDINARY_CONFIG.api_key}:${CLOUDINARY_CONFIG.api_secret}`)}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Erreur API Cloudinary: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('🔍 Cloudinary - Images trouvées:', data.resources?.length || 0);
+      
+      // Transformer les ressources Cloudinary en format compatible
+      const images = (data.resources || []).map(resource => ({
+        id: resource.public_id,
+        title: resource.public_id.split('/').pop() || 'Image Cloudinary',
+        description: '',
+        url: resource.secure_url,
+        public_id: resource.public_id,
+        filename: resource.public_id.split('/').pop() || 'image',
+        size: resource.bytes,
+        type: resource.format === 'mp4' ? 'video/mp4' : `image/${resource.format}`,
+        category: 'events', // Catégorie par défaut
+        isVideo: resource.format === 'mp4',
+        width: resource.width,
+        height: resource.height,
+        duration: resource.duration || null,
+        createdAt: resource.created_at
+      }));
+
+      return images;
+    } catch (error) {
+      console.error('Erreur récupération images Cloudinary:', error);
+      return [];
+    }
+  }
+
   // Vérifier si un fichier est une vidéo
   static isVideo(file) {
     return file.type.startsWith('video/');
