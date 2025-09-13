@@ -56,110 +56,25 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
     console.log('🔍 EventGallery - Event complet:', event);
     
     try {
-      // Diagnostic : lister tous les médias dans la base
-      console.log('🔍 EventGallery - Diagnostic complet:');
-      console.log('- dataManager.useIndexedDB:', dataManager.useIndexedDB);
-      console.log('- dataManager.indexedDBReady:', dataManager.indexedDBReady);
-      console.log('- eventIdentifier:', eventIdentifier);
-      console.log('- eventType:', eventType);
+      // Récupérer les médias depuis Firebase (pour TOUS les utilisateurs)
+      const firebaseImages = await FirebaseService.getImages();
+      console.log('🔍 EventGallery - Images Firebase récupérées:', firebaseImages.length);
       
-      if (dataManager.useIndexedDB && dataManager.indexedDBReady) {
-        try {
-          const allMedia = await indexedDBManager.getAllMedia();
-          console.log('🔍 EventGallery - Diagnostic: Tous les médias dans IndexedDB:', allMedia);
-          
-          // Chercher spécifiquement les médias pour cet événement
-          const eventMediaInDB = allMedia.filter(m => 
-            m.eventId === eventIdentifier || 
-            m.eventId === 'barbecueAccueil' || 
-            m.eventId === 'barbecueAccueil2025'
-          );
-          console.log('🔍 EventGallery - Médias trouvés pour cet événement:', eventMediaInDB);
-        } catch (error) {
-          console.error('❌ EventGallery - Erreur lors du diagnostic IndexedDB:', error);
-        }
-      }
+      // Filtrer les images pour cet événement spécifique
+      const eventMedia = firebaseImages.filter(img => 
+        img.eventId === eventIdentifier || 
+        img.eventId === 'barbecueAccueil' ||
+        img.eventId === 'barbecueAccueil2025'
+      );
+      console.log('✅ EventGallery - Médias Firebase pour cet événement:', eventMedia.length);
       
-      // Charger les médias dynamiques
-      let eventMedia = await dataManager.getEventMedia(eventIdentifier, eventType);
-      console.log('✅ EventGallery - Médias dynamiques trouvés avec type', eventType, ':', eventMedia);
+      // Charger aussi les médias dynamiques locaux (pour compatibilité)
+      let localEventMedia = await dataManager.getEventMedia(eventIdentifier, eventType);
+      console.log('✅ EventGallery - Médias locaux trouvés:', localEventMedia?.length || 0);
       
-      // Si aucun média trouvé avec le type spécifié, essayer avec d'autres types et clés
-      if (!eventMedia || eventMedia.length === 0) {
-        console.log('⚠️ EventGallery - Aucun média trouvé avec le type', eventType, ', essai avec d\'autres types et clés');
-        
-        // Essayer avec 'upcoming' si on était sur 'past'
-        if (eventType === 'past') {
-          eventMedia = await dataManager.getEventMedia(eventIdentifier, 'upcoming');
-          console.log('✅ EventGallery - Médias trouvés avec type upcoming:', eventMedia);
-        }
-        
-        // Essayer avec 'gallery' si c'est un événement de galerie
-        if (!eventMedia || eventMedia.length === 0) {
-          eventMedia = await dataManager.getEventMedia(eventIdentifier, 'gallery');
-          console.log('✅ EventGallery - Médias trouvés avec type gallery:', eventMedia);
-        }
-        
-        // Essayer avec des clés alternatives pour le barbecue
-        if (!eventMedia || eventMedia.length === 0) {
-          const alternativeKeys = [];
-          if (eventIdentifier === 'barbecueAccueil') {
-            alternativeKeys.push('barbecueAccueil2025');
-          } else if (eventIdentifier === 'barbecueAccueil2025') {
-            alternativeKeys.push('barbecueAccueil');
-          }
-          
-          for (const altKey of alternativeKeys) {
-            console.log('🔍 EventGallery - Essai avec clé alternative:', altKey);
-            eventMedia = await dataManager.getEventMedia(altKey, eventType);
-            if (eventMedia && eventMedia.length > 0) {
-              console.log('✅ EventGallery - Médias trouvés avec clé alternative', altKey, ':', eventMedia);
-              break;
-            }
-            
-            // Essayer aussi avec d'autres types pour la clé alternative
-            if (eventType === 'past') {
-              eventMedia = await dataManager.getEventMedia(altKey, 'upcoming');
-              if (eventMedia && eventMedia.length > 0) {
-                console.log('✅ EventGallery - Médias trouvés avec clé alternative', altKey, 'et type upcoming:', eventMedia);
-                break;
-              }
-            }
-          }
-        }
-        
-        // Fallback : essayer de charger depuis localStorage directement
-        if (!eventMedia || eventMedia.length === 0) {
-          console.log('⚠️ EventGallery - Fallback vers localStorage direct');
-          try {
-            const localStorageData = JSON.parse(localStorage.getItem('cie-edmonton-data') || '{}');
-            console.log('🔍 EventGallery - Données localStorage:', localStorageData);
-            
-            // Chercher dans tous les types d'événements
-            const allEvents = [
-              ...(localStorageData.events?.past || []),
-              ...(localStorageData.events?.upcoming || []),
-              ...(localStorageData.events?.gallery || [])
-            ];
-            
-            const foundEvent = allEvents.find(e => 
-              e.id === eventIdentifier || 
-              e.key === eventIdentifier ||
-              e.id === 'barbecueAccueil' || 
-              e.key === 'barbecueAccueil' ||
-              e.id === 'barbecueAccueil2025' || 
-              e.key === 'barbecueAccueil2025'
-            );
-            
-            if (foundEvent && foundEvent.media) {
-              eventMedia = foundEvent.media;
-              console.log('✅ EventGallery - Médias trouvés dans localStorage:', eventMedia);
-            }
-          } catch (error) {
-            console.error('❌ EventGallery - Erreur lors du fallback localStorage:', error);
-          }
-        }
-      }
+      // Combiner les médias Firebase et locaux
+      const allEventMedia = [...eventMedia, ...(localEventMedia || [])];
+      console.log('✅ EventGallery - Total médias combinés:', allEventMedia.length);
       
       // Charger les médias statiques depuis les traductions
       let staticMedia = [];
@@ -175,16 +90,18 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         console.log('✅ EventGallery - Médias statiques trouvés:', staticMedia);
       }
       
-      // Combiner les médias dynamiques et statiques
-      const allMedia = [...(eventMedia || []), ...staticMedia];
+      // Combiner les médias Firebase, locaux et statiques
+      const allMedia = [...allEventMedia, ...staticMedia];
       console.log('✅ EventGallery - Total médias:', allMedia.length);
       console.log('🔍 EventGallery - Détail des médias:', allMedia.map(m => ({
         id: m.id,
         type: m.type,
         hasData: !!m.data,
         hasCloudinaryUrl: !!m.cloudinaryUrl,
+        hasUrl: !!m.url,
         dataUrl: m.data ? m.data.substring(0, 50) + '...' : 'null',
-        cloudinaryUrl: m.cloudinaryUrl ? m.cloudinaryUrl.substring(0, 50) + '...' : 'null'
+        cloudinaryUrl: m.cloudinaryUrl ? m.cloudinaryUrl.substring(0, 50) + '...' : 'null',
+        firebaseUrl: m.url ? m.url.substring(0, 50) + '...' : 'null'
       })));
       setMedia(allMedia);
     } catch (error) {
@@ -639,12 +556,14 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                   >
                     {mediaItem.type === 'image' ? (
                       <img
-                        src={mediaItem.cloudinaryUrl || mediaItem.data}
+                        src={mediaItem.url || mediaItem.cloudinaryUrl || mediaItem.data}
                         alt={mediaItem.description || mediaItem.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          // Fallback vers l'URL locale si Cloudinary échoue
-                          if (mediaItem.cloudinaryUrl && mediaItem.data !== mediaItem.cloudinaryUrl) {
+                          // Fallback vers Cloudinary puis local si Firebase échoue
+                          if (mediaItem.url && mediaItem.cloudinaryUrl && mediaItem.url !== mediaItem.cloudinaryUrl) {
+                            e.target.src = mediaItem.cloudinaryUrl;
+                          } else if (mediaItem.cloudinaryUrl && mediaItem.data && mediaItem.cloudinaryUrl !== mediaItem.data) {
                             e.target.src = mediaItem.data;
                           }
                         }}
@@ -652,12 +571,14 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                     ) : (
                       <div className="relative w-full h-full">
                         <video
-                          src={mediaItem.cloudinaryUrl || mediaItem.data}
+                          src={mediaItem.url || mediaItem.cloudinaryUrl || mediaItem.data}
                           className="w-full h-full object-cover"
                           muted
                           onError={(e) => {
-                            // Fallback vers l'URL locale si Cloudinary échoue
-                            if (mediaItem.cloudinaryUrl && mediaItem.data !== mediaItem.cloudinaryUrl) {
+                            // Fallback vers Cloudinary puis local si Firebase échoue
+                            if (mediaItem.url && mediaItem.cloudinaryUrl && mediaItem.url !== mediaItem.cloudinaryUrl) {
+                              e.target.src = mediaItem.cloudinaryUrl;
+                            } else if (mediaItem.cloudinaryUrl && mediaItem.data && mediaItem.cloudinaryUrl !== mediaItem.data) {
                               e.target.src = mediaItem.data;
                             }
                           }}
