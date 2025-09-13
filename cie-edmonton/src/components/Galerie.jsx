@@ -100,6 +100,26 @@ const Galerie = ({ t }) => {
   const meta = (key) => g.items?.[key] ?? {};
   const photos = (key) => (meta(key).photos ?? []).filter(Boolean);
 
+  // Mapping des images statiques vers Cloudinary
+  const cloudinaryImages = {
+    'barbecueAccueil': 'barbecue-accueil',
+    'cookingWorkshop': 'atelier-cuisine', 
+    'danceNight': 'soiree-danse',
+    'independence2023': 'independence-2023',
+    'africanMarket': 'marche-africain',
+    'generalAssembly': 'president',
+    'kidsFestival': 'vice-presidente',
+    'musicConcert': 'attieke'
+  };
+
+  // Génère l'URL Cloudinary optimisée
+  const getCloudinaryImageUrl = (key) => {
+    const cloudinaryId = cloudinaryImages[key];
+    if (!cloudinaryId) return null;
+    
+    return `https://res.cloudinary.com/dwe2qubud/image/upload/q_auto,f_auto,w_auto,h_auto,c_fill/${cloudinaryId}`;
+  };
+
   // Charger les images uploadées via Cloudinary
   useEffect(() => {
     const loadUploadedImages = () => {
@@ -265,59 +285,55 @@ const Galerie = ({ t }) => {
               className="card-hover bg-white rounded-2xl shadow-xl overflow-hidden"
             >
      <div className="h-64 sm:h-80 bg-gradient-to-br from-orange-200 via-white to-green-200 flex items-center justify-center relative overflow-hidden">
-       {/* Force l'affichage de l'image pour barbecueAccueil */}
-       {item.key === 'barbecueAccueil' ? (
-         <>
-           <img
-             src="/img/1.jpg"
-             alt="Barbecue d'accueil des nouveaux arrivants"
-             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-             onLoad={(e) => {
-               console.log('✅ Image barbecue forcée chargée avec succès');
-               e.target.style.display = 'block';
-               e.target.nextSibling.style.display = 'none';
-             }}
-             onError={(e) => {
-               console.error('❌ Erreur de chargement de l\'image barbecue forcée');
-               e.target.style.display = 'none';
-               e.target.nextSibling.style.display = 'flex';
-             }}
-             style={{display: 'block'}}
-           />
-           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-200 to-green-200" style={{display: 'flex'}}>
-             <div className="text-center">
-               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-2"></div>
-               <span className="text-sm text-gray-600">Chargement de l'image...</span>
-             </div>
-           </div>
-         </>
-       ) : meta(item.key).image ? (
+       {/* Images locales avec fallback Cloudinary */}
+       {meta(item.key).image ? (
          <img
            src={meta(item.key).image}
            alt={meta(item.key).title}
            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
            onLoad={(e) => {
-             console.log('✅ Image chargée avec succès dans galerie:', meta(item.key).image);
+             console.log('✅ Image locale chargée avec succès:', meta(item.key).image);
              e.target.style.display = 'block';
            }}
            onError={(e) => {
-             console.error('❌ Erreur de chargement de l\'image dans galerie:', meta(item.key).image);
+             console.log('⚠️ Image locale non trouvée, tentative Cloudinary...');
+             // Essayer Cloudinary en cas d'échec
+             const cloudinaryUrl = getCloudinaryImageUrl(item.key);
+             if (cloudinaryUrl) {
+               e.target.src = cloudinaryUrl;
+               e.target.onError = () => {
+                 console.error('❌ Aucune image trouvée (locale et Cloudinary)');
+                 e.target.style.display = 'none';
+               };
+             } else {
+               e.target.style.display = 'none';
+             }
+           }}
+           style={{display: 'block'}}
+         />
+       ) : getCloudinaryImageUrl(item.key) ? (
+         <img
+           src={getCloudinaryImageUrl(item.key)}
+           alt={meta(item.key).title || item.key}
+           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+           onLoad={(e) => {
+             console.log('✅ Image Cloudinary chargée avec succès:', getCloudinaryImageUrl(item.key));
+             e.target.style.display = 'block';
+           }}
+           onError={(e) => {
+             console.error('❌ Erreur de chargement de l\'image Cloudinary:', getCloudinaryImageUrl(item.key));
              e.target.style.display = 'none';
            }}
            style={{display: 'block'}}
          />
-       ) : null}
-                
-                {/* Fallback seulement si pas d'image */}
-                <div 
-                  className={`absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-orange-200 to-green-200 ${(item.key === 'barbecueAccueil' || meta(item.key).image) ? 'hidden' : 'flex'}`}
-                  style={{display: (item.key === 'barbecueAccueil' || meta(item.key).image) ? 'none' : 'flex'}}
-                >
-                  <span className="text-8xl mb-2">{item.emoji}</span>
-                  <span className="text-sm text-gray-600 text-center px-4">
-                    Aucune image
-                  </span>
-                </div>
+       ) : (
+         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-200 to-green-200">
+           <div className="text-center">
+             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-2"></div>
+             <span className="text-sm text-gray-600">Aucune image disponible</span>
+           </div>
+         </div>
+       )}
                 <div className="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full text-sm font-medium text-gray-700">
                   {g.categories[item.category]}
                 </div>

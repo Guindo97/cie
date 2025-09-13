@@ -9,6 +9,7 @@ import Galerie from './components/Galerie';
 import Contact from './components/Contact';
 import Admin from './components/Admin';
 import Footer from './components/Footer';
+import CloudinaryTest from './components/CloudinaryTest';
 import { translations } from './utils/translations';
 import './App.css';
 
@@ -54,7 +55,15 @@ const App = () => {
         t={t}
       />
       <div className="flex-1">
-        {renderPage()}
+        {currentPage === 'test-cloudinary' ? (
+          <div className="min-h-screen bg-gray-100 py-20">
+            <div className="max-w-4xl mx-auto px-4">
+              <CloudinaryTest />
+            </div>
+          </div>
+        ) : (
+          renderPage()
+        )}
       </div>
       <Footer 
         t={t} 

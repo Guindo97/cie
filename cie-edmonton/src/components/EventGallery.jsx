@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { dataManager } from '../utils/dataManager';
 import indexedDBManager from '../utils/indexedDBManager';
+import CloudinaryService from '../utils/cloudinaryService';
 
 const ADMIN_PASSWORD = 'cice2025';
 
@@ -17,6 +18,9 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
     type: 'image',
     description: ''
   });
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState('');
 
   useEffect(() => {
     loadMedia();
@@ -173,6 +177,14 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
       // Combiner les médias dynamiques et statiques
       const allMedia = [...(eventMedia || []), ...staticMedia];
       console.log('✅ EventGallery - Total médias:', allMedia.length);
+      console.log('🔍 EventGallery - Détail des médias:', allMedia.map(m => ({
+        id: m.id,
+        type: m.type,
+        hasData: !!m.data,
+        hasCloudinaryUrl: !!m.cloudinaryUrl,
+        dataUrl: m.data ? m.data.substring(0, 50) + '...' : 'null',
+        cloudinaryUrl: m.cloudinaryUrl ? m.cloudinaryUrl.substring(0, 50) + '...' : 'null'
+      })));
       setMedia(allMedia);
     } catch (error) {
       console.error('❌ EventGallery - Erreur lors du chargement des médias:', error);
@@ -256,10 +268,10 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Vérifier la taille du fichier (max 10MB pour les images, 5MB pour les vidéos)
-      const maxSize = file.type.startsWith('image/') ? 10 * 1024 * 1024 : 5 * 1024 * 1024;
-      if (file.size > maxSize) {
-        alert(`Le fichier est trop volumineux. Taille maximale : ${maxSize / (1024 * 1024)}MB`);
+      // Valider la taille du fichier avec CloudinaryService
+      const validation = CloudinaryService.validateFileSize(file, 50); // 50MB max
+      if (!validation.valid) {
+        alert(`Le fichier ${file.name} est trop volumineux (${validation.sizeMB}MB). Taille maximum: 50MB`);
         return;
       }
       
@@ -312,26 +324,72 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
     }
     
     if (uploadData.file) {
-      const eventIdentifier = event.key || event.id;
-      const mediaData = {
-        type: uploadData.type,
-        data: uploadData.data,
-        name: uploadData.name,
-        description: uploadData.description,
-        fileSize: uploadData.file.size,
-        mimeType: uploadData.file.type
-      };
+      setUploading(true);
+      setUploadProgress(0);
+      setUploadStatus('Upload en cours...');
       
-      console.log('Ajout de média pour:', eventIdentifier, eventType, mediaData);
+      const eventIdentifier = event.key || event.id;
+      
       try {
-        const result = await dataManager.addEventMedia(eventIdentifier, mediaData, eventType);
-        console.log('Résultat ajout:', result);
-        await loadMedia();
-        setShowUpload(false);
-        setUploadData({ file: null, type: 'image', description: '' });
+        let uploadResult;
+        
+        // Upload vers Cloudinary
+        if (uploadData.type === 'image') {
+          uploadResult = await CloudinaryService.uploadImage(uploadData.file, {
+            folder: `cice-edmonton/events/${eventIdentifier}`,
+            public_id: `${eventIdentifier}_${Date.now()}`
+          });
+        } else {
+          uploadResult = await CloudinaryService.uploadVideo(uploadData.file, {
+            folder: `cice-edmonton/events/${eventIdentifier}`,
+            public_id: `${eventIdentifier}_${Date.now()}`
+          });
+        }
+        
+        if (uploadResult.success) {
+          setUploadProgress(100);
+          setUploadStatus('✅ Upload réussi !');
+          
+          // Créer les données du média avec l'URL Cloudinary
+          const mediaData = {
+            type: uploadData.type,
+            data: uploadResult.data.secure_url, // URL Cloudinary correcte
+            cloudinaryUrl: uploadResult.data.secure_url,
+            cloudinaryPublicId: uploadResult.data.public_id,
+            name: uploadData.name,
+            description: uploadData.description,
+            fileSize: uploadResult.data.bytes,
+            mimeType: uploadData.file.type,
+            uploadedAt: new Date().toISOString()
+          };
+          
+          console.log('Ajout de média Cloudinary pour:', eventIdentifier, eventType, mediaData);
+          
+          // Sauvegarder dans le dataManager
+          const result = await dataManager.addEventMedia(eventIdentifier, mediaData, eventType);
+          console.log('Résultat ajout:', result);
+          
+          // Recharger les médias
+          await loadMedia();
+          
+          // Fermer le modal après un délai
+          setTimeout(() => {
+            setShowUpload(false);
+            setUploadData({ file: null, type: 'image', description: '' });
+            setUploading(false);
+            setUploadProgress(0);
+            setUploadStatus('');
+          }, 2000);
+          
+        } else {
+          throw new Error(uploadResult.error || 'Erreur lors de l\'upload');
+        }
+        
       } catch (error) {
-        console.error('Erreur lors de l\'ajout du média:', error);
-        alert('Erreur lors de l\'ajout du média. Veuillez réessayer.');
+        console.error('Erreur lors de l\'upload Cloudinary:', error);
+        setUploadStatus(`❌ Erreur: ${error.message}`);
+        setUploading(false);
+        alert(`Erreur lors de l'upload: ${error.message}`);
       }
     }
   };
@@ -546,16 +604,28 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                   >
                     {mediaItem.type === 'image' ? (
                       <img
-                        src={mediaItem.data}
+                        src={mediaItem.cloudinaryUrl || mediaItem.data}
                         alt={mediaItem.description || mediaItem.name}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback vers l'URL locale si Cloudinary échoue
+                          if (mediaItem.cloudinaryUrl && mediaItem.data !== mediaItem.cloudinaryUrl) {
+                            e.target.src = mediaItem.data;
+                          }
+                        }}
                       />
                     ) : (
                       <div className="relative w-full h-full">
                         <video
-                          src={mediaItem.data}
+                          src={mediaItem.cloudinaryUrl || mediaItem.data}
                           className="w-full h-full object-cover"
                           muted
+                          onError={(e) => {
+                            // Fallback vers l'URL locale si Cloudinary échoue
+                            if (mediaItem.cloudinaryUrl && mediaItem.data !== mediaItem.cloudinaryUrl) {
+                              e.target.src = mediaItem.data;
+                            }
+                          }}
                         />
                         {/* Icône play pour les vidéos */}
                         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
@@ -645,6 +715,25 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
             <div className="bg-white rounded-2xl p-6 max-w-md w-full">
               <h3 className="text-xl font-bold mb-4">Ajouter un média</h3>
               
+              {/* Barre de progression */}
+              {uploading && (
+                <div className="mb-4">
+                  <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>Upload en cours...</span>
+                    <span>{Math.round(uploadProgress)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-orange-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  {uploadStatus && (
+                    <p className="text-sm text-gray-600 mt-2">{uploadStatus}</p>
+                  )}
+                </div>
+              )}
+              
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -689,14 +778,24 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                 <div className="flex space-x-3">
                   <button
                     type="submit"
-                    className="flex-1 bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors"
+                    disabled={uploading}
+                    className={`flex-1 py-2 px-4 rounded-lg transition-colors ${
+                      uploading 
+                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                        : 'bg-orange-500 text-white hover:bg-orange-600'
+                    }`}
                   >
-                    Ajouter
+                    {uploading ? 'Upload...' : 'Ajouter'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowUpload(false)}
-                    className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
+                    disabled={uploading}
+                    className={`flex-1 py-2 px-4 rounded-lg transition-colors ${
+                      uploading 
+                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                        : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+                    }`}
                   >
                     Annuler
                   </button>
@@ -738,18 +837,30 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
               <div className="w-full h-full flex items-center justify-center">
                 {selectedMedia.type === 'image' ? (
                   <img
-                    src={selectedMedia.data}
+                    src={selectedMedia.cloudinaryUrl || selectedMedia.data}
                     alt={selectedMedia.description || selectedMedia.name}
                     className="max-w-full max-h-full w-auto h-auto object-contain"
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    onError={(e) => {
+                      // Fallback vers l'URL locale si Cloudinary échoue
+                      if (selectedMedia.cloudinaryUrl && selectedMedia.data !== selectedMedia.cloudinaryUrl) {
+                        e.target.src = selectedMedia.data;
+                      }
+                    }}
                   />
                 ) : (
                   <video
-                    src={selectedMedia.data}
+                    src={selectedMedia.cloudinaryUrl || selectedMedia.data}
                     controls
                     autoPlay
                     className="max-w-full max-h-full w-auto h-auto"
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    onError={(e) => {
+                      // Fallback vers l'URL locale si Cloudinary échoue
+                      if (selectedMedia.cloudinaryUrl && selectedMedia.data !== selectedMedia.cloudinaryUrl) {
+                        e.target.src = selectedMedia.data;
+                      }
+                    }}
                   />
                 )}
               </div>
