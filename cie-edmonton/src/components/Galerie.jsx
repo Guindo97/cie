@@ -124,30 +124,19 @@ const Galerie = ({ t }) => {
   useEffect(() => {
     const loadUploadedImages = async () => {
       try {
-        // D'abord essayer de récupérer depuis le localStorage (pour la compatibilité)
-        const localImages = dataManager.getImages();
-        console.log('🔍 Galerie - Images locales:', localImages.length);
+        // Récupérer les images depuis Cloudinary avec leurs métadonnées
+        const cloudinaryImages = await CloudinaryService.getImagesFromCloudinary();
+        console.log('🔍 Galerie - Images Cloudinary récupérées:', cloudinaryImages.length);
         
-        // Ensuite, essayer de récupérer depuis Cloudinary directement
-        try {
-          const cloudinaryImages = await CloudinaryService.getImagesFromCloudinary();
-          console.log('🔍 Galerie - Images Cloudinary:', cloudinaryImages.length);
-          
-          // Combiner les images locales et Cloudinary, en priorisant Cloudinary
-          const allImages = [...cloudinaryImages, ...localImages.filter(local => 
-            !cloudinaryImages.some(cloud => cloud.public_id === local.public_id)
-          )];
-          
-          setUploadedImages(allImages);
-          console.log('✅ Galerie - Total images chargées:', allImages.length);
-        } catch (cloudinaryError) {
-          console.warn('⚠️ Impossible de récupérer depuis Cloudinary, utilisation du localStorage:', cloudinaryError);
-          setUploadedImages(localImages);
-          console.log('✅ Galerie - Images locales utilisées:', localImages.length);
-        }
+        // Afficher les images Cloudinary directement
+        setUploadedImages(cloudinaryImages);
+        console.log('✅ Galerie - Images cloud affichées:', cloudinaryImages.length);
       } catch (error) {
-        console.error('❌ Erreur chargement images:', error);
-        setUploadedImages([]);
+        console.error('❌ Erreur chargement images Cloudinary:', error);
+        // Fallback vers localStorage en cas d'erreur
+        const localImages = dataManager.getImages();
+        setUploadedImages(localImages);
+        console.log('⚠️ Fallback vers images locales:', localImages.length);
       } finally {
         setLoading(false);
       }

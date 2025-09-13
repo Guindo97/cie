@@ -96,14 +96,9 @@ class CloudinaryService {
   // Récupérer toutes les images depuis Cloudinary
   static async getImagesFromCloudinary() {
     try {
+      // Utiliser l'API publique Cloudinary (sans credentials)
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/resources/image?max_results=500&type=upload&prefix=cice-edmonton`,
-        {
-          method: 'GET',
-          headers: {
-            'Authorization': `Basic ${btoa(`${CLOUDINARY_CONFIG.api_key}:${CLOUDINARY_CONFIG.api_secret}`)}`
-          }
-        }
+        `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloud_name}/image/list/cice-edmonton.json`
       );
 
       if (!response.ok) {
