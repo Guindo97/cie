@@ -170,31 +170,7 @@ const Galerie = ({ t }) => {
           <h1 className="text-5xl font-bold gradient-text mb-6">{g.title}</h1>
           <p className="text-2xl text-gray-600">{g.subtitle}</p>
           
-          {/* Statistiques */}
-          <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 max-w-2xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-orange-500">{itemsFiltered.length}</div>
-                <div className="text-sm text-gray-600">Images statiques</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-500">0</div>
-                <div className="text-sm text-gray-600">Images Cloudinary</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-500">
-                  {uploadedImages.filter(img => img.isVideo).length}
-                </div>
-                <div className="text-sm text-gray-600">Vidéos</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-purple-500">
-                  {new Set(uploadedImages.map(img => img.category)).size}
-                </div>
-                <div className="text-sm text-gray-600">Catégories</div>
-              </div>
-            </div>
-          </div>
+          {/* Section Statistiques masquée */}
         </div>
 
         {/* Filtres */}
