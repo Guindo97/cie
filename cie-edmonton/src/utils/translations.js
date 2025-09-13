@@ -206,7 +206,10 @@ export const translations = {
           title: "Soirée Danse Ivoirienne",
           image: "/img/danse.png"
         },
-        generalAssembly: { title: "Assemblée Générale" },
+        generalAssembly: { 
+          title: "Assemblée Générale",
+          image: "/img/ag.png"
+        },
         kidsFestival: { title: "Festival des Enfants" },
         weddingCeremony: { title: "Cérémonie de Mariage" },
         footballMatch: { title: "Match de Football" },
@@ -450,7 +453,10 @@ export const translations = {
           title: "Ivorian Dance Night",
           image: "/img/danse.png"
         },
-        generalAssembly: { title: "General Assembly" },
+        generalAssembly: { 
+          title: "General Assembly",
+          image: "/img/ag.png"
+        },
         kidsFestival: { title: "Children's Festival" },
         weddingCeremony: { title: "Wedding Ceremony" },
         footballMatch: { title: "Football Match" },
