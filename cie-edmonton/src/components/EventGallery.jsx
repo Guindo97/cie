@@ -65,8 +65,17 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         img.eventId === eventIdentifier || 
         img.eventId === 'barbecueAccueil' ||
         img.eventId === 'barbecueAccueil2025'
-      );
+      ).map(img => ({
+        ...img,
+        // S'assurer que les propriétés sont correctes pour l'affichage
+        type: img.isVideo ? 'video' : 'image',
+        data: img.url, // Utiliser l'URL Firebase comme data
+        cloudinaryUrl: img.url, // Aussi comme cloudinaryUrl
+        name: img.title || img.filename || 'Image Firebase',
+        description: img.description || ''
+      }));
       console.log('✅ EventGallery - Médias Firebase pour cet événement:', eventMedia.length);
+      console.log('🔍 EventGallery - Détail des médias Firebase:', eventMedia);
       
       // Charger aussi les médias dynamiques locaux (pour compatibilité)
       let localEventMedia = await dataManager.getEventMedia(eventIdentifier, eventType);
