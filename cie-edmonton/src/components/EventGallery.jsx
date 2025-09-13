@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { dataManager } from '../utils/dataManager';
 import indexedDBManager from '../utils/indexedDBManager';
 import CloudinaryService from '../utils/cloudinaryService';
+import FirebaseService from '../utils/firebaseService';
 
 const ADMIN_PASSWORD = 'cice2025';
 
@@ -373,7 +374,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
           const result = await dataManager.addEventMedia(eventIdentifier, mediaData, eventType);
           console.log('Résultat ajout:', result);
           
-          // AUSSI ajouter à la galerie principale pour que le compteur "Images Cloudinary" fonctionne
+          // AUSSI ajouter à Firebase pour que TOUS les utilisateurs voient l'image
           const galleryImageData = {
             title: mediaData.name || `Image ${eventIdentifier}`,
             description: mediaData.description || '',
@@ -387,12 +388,21 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
             width: uploadResult.data.width,
             height: uploadResult.data.height,
             duration: uploadResult.data.duration || null,
-            createdAt: mediaData.uploadedAt
+            eventId: eventIdentifier,
+            eventType: eventType
           };
           
-          // Ajouter à la galerie principale
+          // Ajouter à Firebase (pour tous les utilisateurs)
+          const firebaseResult = await FirebaseService.addImage(galleryImageData);
+          if (firebaseResult.success) {
+            console.log('✅ Image ajoutée à Firebase pour tous les utilisateurs');
+          } else {
+            console.error('❌ Erreur ajout Firebase:', firebaseResult.error);
+          }
+          
+          // AUSSI ajouter localement (pour compatibilité)
           dataManager.addImage(galleryImageData);
-          console.log('✅ Image ajoutée à la galerie principale');
+          console.log('✅ Image ajoutée localement aussi');
           
           // Recharger les médias
           await loadMedia();

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { dataManager } from '../utils/dataManager';
 import EventGallery from './EventGallery';
 import CloudinaryService from '../utils/cloudinaryService';
+import FirebaseService from '../utils/firebaseService';
 
 const Galerie = ({ t }) => {
   const g = t.gallery;
@@ -120,19 +121,19 @@ const Galerie = ({ t }) => {
     return `https://res.cloudinary.com/dwe2qubud/image/upload/q_auto,f_auto,w_auto,h_auto,c_fill/${cloudinaryId}`;
   };
 
-  // Charger les images uploadées via Cloudinary
+  // Charger les images uploadées via Firebase
   useEffect(() => {
     const loadUploadedImages = async () => {
       try {
-        // Récupérer les images depuis Cloudinary avec leurs métadonnées
-        const cloudinaryImages = await CloudinaryService.getImagesFromCloudinary();
-        console.log('🔍 Galerie - Images Cloudinary récupérées:', cloudinaryImages.length);
+        // Récupérer les images depuis Firebase (pour TOUS les utilisateurs)
+        const firebaseImages = await FirebaseService.getImages();
+        console.log('🔍 Galerie - Images Firebase récupérées:', firebaseImages.length);
         
-        // Afficher les images Cloudinary directement
-        setUploadedImages(cloudinaryImages);
-        console.log('✅ Galerie - Images cloud affichées:', cloudinaryImages.length);
+        // Afficher les images Firebase directement
+        setUploadedImages(firebaseImages);
+        console.log('✅ Galerie - Images Firebase affichées:', firebaseImages.length);
       } catch (error) {
-        console.error('❌ Erreur chargement images Cloudinary:', error);
+        console.error('❌ Erreur chargement images Firebase:', error);
         // Fallback vers localStorage en cas d'erreur
         const localImages = dataManager.getImages();
         setUploadedImages(localImages);
