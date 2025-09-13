@@ -214,78 +214,7 @@ const Galerie = ({ t }) => {
           ))}
         </div>
 
-        {/* Images uploadées via Cloudinary */}
-        {uploadedImages.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              <i className="fas fa-cloud mr-2 text-blue-500"></i>
-              Galerie Cloudinary ({uploadedImages.length} images)
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {uploadedImages
-                .filter(img => selectedCategoryKey === "all" || img.category === selectedCategoryKey)
-                .map((image) => (
-                <div
-                  key={image.id}
-                  className="relative group cursor-pointer bg-white rounded-xl shadow-lg overflow-hidden"
-                  onClick={() => openEventGallery(`cloudinary_${image.id}`)}
-                >
-                  <div className="aspect-square overflow-hidden">
-                    {image.isVideo ? (
-                      <div className="relative w-full h-full">
-                        <video
-                          src={image.url}
-                          className="w-full h-full object-cover"
-                          muted
-                          loop
-                          playsInline
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                          <i className="fas fa-play text-white text-2xl"></i>
-                        </div>
-                        <div className="absolute top-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded-full text-xs">
-                          <i className="fas fa-play mr-1"></i>
-                          Vidéo
-                        </div>
-                      </div>
-                    ) : (
-                      <img
-                        src={image.url}
-                        alt={image.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    )}
-                    
-                    {/* Overlay au survol */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <i className="fas fa-search-plus text-white text-2xl"></i>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Titre de l'image */}
-                  {image.title && (
-                    <div className="p-2">
-                      <p className="text-xs text-gray-700 truncate font-medium">
-                        {image.title}
-                      </p>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                          {g.categories[image.category] || image.category}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {new Date(image.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Section Images Cloudinary masquée - les images s'affichent seulement dans EventGallery */}
 
         {/* Grille des images statiques */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
