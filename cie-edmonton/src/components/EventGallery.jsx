@@ -61,11 +61,18 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
       console.log('🔍 EventGallery - Images Firebase récupérées:', firebaseImages.length);
       
       // Filtrer les images pour cet événement spécifique
-      const eventMedia = firebaseImages.filter(img => 
-        img.eventId === eventIdentifier || 
-        img.eventId === 'barbecueAccueil' ||
-        img.eventId === 'barbecueAccueil2025'
-      ).map(img => ({
+      const eventMedia = firebaseImages.filter(img => {
+        // Filtre strict par eventId
+        if (img.eventId === eventIdentifier) return true;
+        
+        // Gestion spéciale pour le barbecue (compatibilité)
+        if (eventIdentifier === 'barbecueAccueil' && 
+            (img.eventId === 'barbecueAccueil' || img.eventId === 'barbecueAccueil2025')) {
+          return true;
+        }
+        
+        return false;
+      }).map(img => ({
         ...img,
         // S'assurer que les propriétés sont correctes pour l'affichage
         type: img.isVideo ? 'video' : 'image',
@@ -282,23 +289,23 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
           setUploadStatus('✅ Upload réussi !');
           
           // Créer les données du média avec l'URL Cloudinary
-          const mediaData = {
-            type: uploadData.type,
+      const mediaData = {
+        type: uploadData.type,
             data: uploadResult.data.secure_url, // URL Cloudinary correcte
             cloudinaryUrl: uploadResult.data.secure_url,
             cloudinaryPublicId: uploadResult.data.public_id,
-            name: uploadData.name,
-            description: uploadData.description,
+        name: uploadData.name,
+        description: uploadData.description,
             fileSize: uploadResult.data.bytes,
             mimeType: uploadData.file.type,
             uploadedAt: new Date().toISOString()
-          };
-          
+      };
+      
           console.log('Ajout de média Cloudinary pour:', eventIdentifier, eventType, mediaData);
           
           // Sauvegarder dans le dataManager
-          const result = await dataManager.addEventMedia(eventIdentifier, mediaData, eventType);
-          console.log('Résultat ajout:', result);
+        const result = await dataManager.addEventMedia(eventIdentifier, mediaData, eventType);
+        console.log('Résultat ajout:', result);
           
           // AUSSI ajouter à Firebase pour que TOUS les utilisateurs voient l'image
           const galleryImageData = {
@@ -331,12 +338,12 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
           console.log('✅ Image ajoutée localement aussi');
           
           // Recharger les médias
-          await loadMedia();
+        await loadMedia();
           
           // Fermer le modal après un délai
           setTimeout(() => {
-            setShowUpload(false);
-            setUploadData({ file: null, type: 'image', description: '' });
+        setShowUpload(false);
+        setUploadData({ file: null, type: 'image', description: '' });
             setUploading(false);
             setUploadProgress(0);
             setUploadStatus('');
