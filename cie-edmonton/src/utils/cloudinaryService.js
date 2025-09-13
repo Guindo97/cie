@@ -18,21 +18,12 @@ class CloudinaryService {
       formData.append('folder', options.folder || 'cice-edmonton');
       
       // Transformations par défaut pour optimiser les images
-      const transformations = {
-        quality: 'auto',
-        fetch_format: 'auto',
-        width: options.width || 'auto',
-        height: options.height || 'auto',
-        crop: options.crop || 'fill',
-        gravity: options.gravity || 'auto'
-      };
-
-      // Ajouter les transformations à la requête
-      Object.keys(transformations).forEach(key => {
-        if (transformations[key]) {
-          formData.append(key, transformations[key]);
-        }
-      });
+      if (options.width) formData.append('width', options.width);
+      if (options.height) formData.append('height', options.height);
+      if (options.crop) formData.append('crop', options.crop);
+      if (options.quality) formData.append('quality', options.quality);
+      if (options.format) formData.append('format', options.format);
+      if (options.public_id) formData.append('public_id', options.public_id);
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`,
@@ -43,25 +34,19 @@ class CloudinaryService {
       );
 
       if (!response.ok) {
-        throw new Error(`Erreur upload: ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Erreur lors de l\'upload');
       }
 
-      const result = await response.json();
-      
+      const data = await response.json();
       return {
         success: true,
-        data: {
-          public_id: result.public_id,
-          secure_url: result.secure_url,
-          width: result.width,
-          height: result.height,
-          format: result.format,
-          bytes: result.bytes,
-          created_at: result.created_at
-        }
+        data: data,
+        url: data.secure_url,
+        public_id: data.public_id
       };
     } catch (error) {
-      console.error('Erreur Cloudinary upload:', error);
+      console.error('Erreur upload image:', error);
       return {
         success: false,
         error: error.message
@@ -75,8 +60,10 @@ class CloudinaryService {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', options.uploadPreset || 'cice_edmonton');
-      formData.append('folder', options.folder || 'cice-edmonton/videos');
+      formData.append('folder', options.folder || 'cice-edmonton');
       
+      if (options.public_id) formData.append('public_id', options.public_id);
+
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/video/upload`,
         {
@@ -86,105 +73,24 @@ class CloudinaryService {
       );
 
       if (!response.ok) {
-        throw new Error(`Erreur upload vidéo: ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Erreur lors de l\'upload');
       }
 
-      const result = await response.json();
-      
+      const data = await response.json();
       return {
         success: true,
-        data: {
-          public_id: result.public_id,
-          secure_url: result.secure_url,
-          width: result.width,
-          height: result.height,
-          format: result.format,
-          bytes: result.bytes,
-          duration: result.duration,
-          created_at: result.created_at
-        }
+        data: data,
+        url: data.secure_url,
+        public_id: data.public_id
       };
     } catch (error) {
-      console.error('Erreur Cloudinary upload vidéo:', error);
+      console.error('Erreur upload vidéo:', error);
       return {
         success: false,
         error: error.message
       };
     }
-  }
-
-  // Générer une URL optimisée pour l'affichage
-  static getOptimizedUrl(publicId, options = {}) {
-    const defaultOptions = {
-      quality: 'auto',
-      fetch_format: 'auto',
-      width: options.width || 'auto',
-      height: options.height || 'auto',
-      crop: options.crop || 'fill',
-      gravity: options.gravity || 'auto'
-    };
-
-    // Construction manuelle de l'URL Cloudinary
-    const transformations = Object.entries(defaultOptions)
-      .filter(([key, value]) => value && value !== 'auto')
-      .map(([key, value]) => `${key}_${value}`)
-      .join(',');
-    
-    const baseUrl = `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloud_name}/image/upload`;
-    return transformations ? `${baseUrl}/${transformations}/${publicId}` : `${baseUrl}/${publicId}`;
-  }
-
-  // Générer une URL de vidéo optimisée
-  static getOptimizedVideoUrl(publicId, options = {}) {
-    const defaultOptions = {
-      quality: 'auto',
-      format: 'auto',
-      width: options.width || 'auto',
-      height: options.height || 'auto',
-      crop: options.crop || 'fill'
-    };
-
-    // Construction manuelle de l'URL Cloudinary pour vidéo
-    const transformations = Object.entries(defaultOptions)
-      .filter(([key, value]) => value && value !== 'auto')
-      .map(([key, value]) => `${key}_${value}`)
-      .join(',');
-    
-    const baseUrl = `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloud_name}/video/upload`;
-    return transformations ? `${baseUrl}/${transformations}/${publicId}` : `${baseUrl}/${publicId}`;
-  }
-
-  // Supprimer un média (nécessite une API backend pour la sécurité)
-  static async deleteMedia(publicId, resourceType = 'image') {
-    try {
-      // Note: La suppression nécessite l'API secret, donc doit être faite côté serveur
-      console.warn('Suppression de média non implémentée côté client pour des raisons de sécurité');
-      return {
-        success: false,
-        error: 'Suppression non disponible côté client'
-      };
-    } catch (error) {
-      console.error('Erreur suppression Cloudinary:', error);
-      return {
-        success: false,
-        error: error.message
-      };
-    }
-  }
-
-  // Upload multiple d'images
-  static async uploadMultipleImages(files, options = {}) {
-    const results = [];
-    
-    for (const file of files) {
-      const result = await this.uploadImage(file, options);
-      results.push({
-        file: file.name,
-        ...result
-      });
-    }
-    
-    return results;
   }
 
   // Vérifier si un fichier est une vidéo
@@ -192,20 +98,31 @@ class CloudinaryService {
     return file.type.startsWith('video/');
   }
 
-  // Vérifier si un fichier est une image
-  static isImage(file) {
-    return file.type.startsWith('image/');
+  // Valider la taille d'un fichier
+  static validateFileSize(file, maxSizeMB = 50) {
+    const sizeMB = file.size / (1024 * 1024);
+    return {
+      valid: sizeMB <= maxSizeMB,
+      sizeMB: sizeMB.toFixed(2)
+    };
   }
 
-  // Valider la taille du fichier
-  static validateFileSize(file, maxSizeMB = 10) {
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
-    return {
-      valid: file.size <= maxSizeBytes,
-      size: file.size,
-      maxSize: maxSizeBytes,
-      sizeMB: (file.size / 1024 / 1024).toFixed(2)
-    };
+  // Générer une URL optimisée pour l'affichage
+  static getOptimizedUrl(publicId, options = {}) {
+    const transformations = [];
+    
+    if (options.width) transformations.push(`w_${options.width}`);
+    if (options.height) transformations.push(`h_${options.height}`);
+    if (options.crop) transformations.push(`c_${options.crop}`);
+    if (options.quality) transformations.push(`q_${options.quality}`);
+    if (options.format) transformations.push(`f_${options.format}`);
+    
+    // Transformations par défaut pour l'optimisation
+    if (!transformations.includes('q_')) transformations.push('q_auto');
+    if (!transformations.includes('f_')) transformations.push('f_auto');
+    
+    const transformString = transformations.join(',');
+    return `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloud_name}/image/upload/${transformString}/${publicId}`;
   }
 }
 
