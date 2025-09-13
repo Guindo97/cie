@@ -129,9 +129,10 @@ const Galerie = ({ t }) => {
         const firebaseImages = await FirebaseService.getImages();
         console.log('🔍 Galerie - Images Firebase récupérées:', firebaseImages.length);
         
-        // Afficher les images Firebase directement
-        setUploadedImages(firebaseImages);
-        console.log('✅ Galerie - Images Firebase affichées:', firebaseImages.length);
+        // NE PAS afficher les images Firebase dans la galerie principale
+        // Elles seront affichées seulement dans EventGallery ("Voir plus")
+        setUploadedImages([]);
+        console.log('✅ Galerie - Images Firebase masquées dans la galerie principale');
       } catch (error) {
         console.error('❌ Erreur chargement images Firebase:', error);
         // Fallback vers localStorage en cas d'erreur
@@ -177,7 +178,7 @@ const Galerie = ({ t }) => {
                 <div className="text-sm text-gray-600">Images statiques</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-blue-500">{uploadedImages.length}</div>
+                <div className="text-2xl font-bold text-blue-500">0</div>
                 <div className="text-sm text-gray-600">Images Cloudinary</div>
               </div>
               <div>
