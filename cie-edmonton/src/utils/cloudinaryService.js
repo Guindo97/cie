@@ -96,9 +96,15 @@ class CloudinaryService {
   // Récupérer toutes les images depuis Cloudinary
   static async getImagesFromCloudinary() {
     try {
-      // Utiliser l'API publique Cloudinary (sans credentials)
+      // Utiliser l'API Cloudinary avec credentials pour récupérer les métadonnées
       const response = await fetch(
-        `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloud_name}/image/list/cice-edmonton.json`
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/resources/image?max_results=500&type=upload&prefix=cice-edmonton&tags=gallery`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Basic ${btoa(`${CLOUDINARY_CONFIG.api_key}:${CLOUDINARY_CONFIG.api_secret}`)}`
+          }
+        }
       );
 
       if (!response.ok) {
@@ -111,8 +117,8 @@ class CloudinaryService {
       // Transformer les ressources Cloudinary en format compatible
       const images = (data.resources || []).map(resource => ({
         id: resource.public_id,
-        title: resource.public_id.split('/').pop() || 'Image Cloudinary',
-        description: '',
+        title: resource.context?.title || resource.public_id.split('/').pop() || 'Image Cloudinary',
+        description: resource.context?.description || '',
         url: resource.secure_url,
         public_id: resource.public_id,
         filename: resource.public_id.split('/').pop() || 'image',

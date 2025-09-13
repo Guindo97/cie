@@ -333,16 +333,20 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
       try {
         let uploadResult;
         
-        // Upload vers Cloudinary
+        // Upload vers Cloudinary avec métadonnées
         if (uploadData.type === 'image') {
           uploadResult = await CloudinaryService.uploadImage(uploadData.file, {
             folder: `cice-edmonton/events/${eventIdentifier}`,
-            public_id: `${eventIdentifier}_${Date.now()}`
+            public_id: `${eventIdentifier}_${Date.now()}`,
+            tags: `cice-edmonton,${eventIdentifier},gallery`,
+            context: `title=${uploadData.name}|description=${uploadData.description}`
           });
         } else {
           uploadResult = await CloudinaryService.uploadVideo(uploadData.file, {
             folder: `cice-edmonton/events/${eventIdentifier}`,
-            public_id: `${eventIdentifier}_${Date.now()}`
+            public_id: `${eventIdentifier}_${Date.now()}`,
+            tags: `cice-edmonton,${eventIdentifier},gallery`,
+            context: `title=${uploadData.name}|description=${uploadData.description}`
           });
         }
         
