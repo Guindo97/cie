@@ -68,16 +68,6 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
 
             {/* === LANG + MENU === */}
             <div className="flex items-center space-x-4">
-              {/* Test Cloudinary (temporaire) */}
-              <button
-                onClick={() => setCurrentPage('test-cloudinary')}
-                className="text-blue-400 hover:text-blue-500 p-2 transition-colors"
-                aria-label="Test Cloudinary"
-                title="Test Cloudinary"
-              >
-                <i className="fas fa-cloud text-sm" aria-hidden="true"></i>
-              </button>
-
               {/* Admin link (discret) */}
               <button
                 onClick={() => setCurrentPage('admin')}

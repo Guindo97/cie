@@ -100,16 +100,16 @@ const Galerie = ({ t }) => {
   const meta = (key) => g.items?.[key] ?? {};
   const photos = (key) => (meta(key).photos ?? []).filter(Boolean);
 
-  // Mapping des images statiques vers Cloudinary
+  // Mapping des images statiques vers Cloudinary (seulement celles uploadées)
   const cloudinaryImages = {
-    'barbecueAccueil': 'barbecue-accueil',
-    'cookingWorkshop': 'atelier-cuisine', 
-    'danceNight': 'soiree-danse',
-    'independence2023': 'independence-2023',
-    'africanMarket': 'marche-africain',
-    'generalAssembly': 'president',
-    'kidsFestival': 'vice-presidente',
-    'musicConcert': 'attieke'
+    // 'barbecueAccueil': 'barbecue-accueil', // Pas encore uploadé
+    // 'cookingWorkshop': 'atelier-cuisine', // Pas encore uploadé
+    // 'danceNight': 'soiree-danse', // Pas encore uploadé
+    // 'independence2023': 'independence-2023', // Pas encore uploadé
+    // 'africanMarket': 'marche-africain', // Pas encore uploadé
+    // 'generalAssembly': 'president', // Pas encore uploadé
+    // 'kidsFestival': 'vice-presidente', // Pas encore uploadé
+    // 'musicConcert': 'attieke' // Pas encore uploadé
   };
 
   // Génère l'URL Cloudinary optimisée
