@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { dataManager } from '../utils/dataManager';
 import EventGallery from './EventGallery';
+import CloudinaryService from '../utils/cloudinaryService';
 
 const Galerie = ({ t }) => {
   const g = t.gallery;
@@ -39,6 +40,10 @@ const Galerie = ({ t }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showEventGallery, setShowEventGallery] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  
+  // État pour les images uploadées via Cloudinary
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const itemsFiltered =
     selectedCategoryKey === "all"
@@ -95,6 +100,23 @@ const Galerie = ({ t }) => {
   const meta = (key) => g.items?.[key] ?? {};
   const photos = (key) => (meta(key).photos ?? []).filter(Boolean);
 
+  // Charger les images uploadées via Cloudinary
+  useEffect(() => {
+    const loadUploadedImages = () => {
+      try {
+        const images = dataManager.getImages();
+        setUploadedImages(images);
+        console.log('✅ Galerie - Images Cloudinary chargées:', images.length);
+      } catch (error) {
+        console.error('❌ Erreur chargement images Cloudinary:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUploadedImages();
+  }, []);
+
   // Écouter l'événement personnalisé pour ouvrir la galerie d'événements
   useEffect(() => {
     const handleOpenEventGallery = (event) => {
@@ -117,6 +139,32 @@ const Galerie = ({ t }) => {
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold gradient-text mb-6">{g.title}</h1>
           <p className="text-2xl text-gray-600">{g.subtitle}</p>
+          
+          {/* Statistiques */}
+          <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-orange-500">{itemsFiltered.length}</div>
+                <div className="text-sm text-gray-600">Images statiques</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-blue-500">{uploadedImages.length}</div>
+                <div className="text-sm text-gray-600">Images Cloudinary</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-green-500">
+                  {uploadedImages.filter(img => img.isVideo).length}
+                </div>
+                <div className="text-sm text-gray-600">Vidéos</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-purple-500">
+                  {new Set(uploadedImages.map(img => img.category)).size}
+                </div>
+                <div className="text-sm text-gray-600">Catégories</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Filtres */}
@@ -136,7 +184,80 @@ const Galerie = ({ t }) => {
           ))}
         </div>
 
-        {/* Grille */}
+        {/* Images uploadées via Cloudinary */}
+        {uploadedImages.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+              <i className="fas fa-cloud mr-2 text-blue-500"></i>
+              Galerie Cloudinary ({uploadedImages.length} images)
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {uploadedImages
+                .filter(img => selectedCategoryKey === "all" || img.category === selectedCategoryKey)
+                .map((image) => (
+                <div
+                  key={image.id}
+                  className="relative group cursor-pointer bg-white rounded-xl shadow-lg overflow-hidden"
+                  onClick={() => openEventGallery(`cloudinary_${image.id}`)}
+                >
+                  <div className="aspect-square overflow-hidden">
+                    {image.isVideo ? (
+                      <div className="relative w-full h-full">
+                        <video
+                          src={image.url}
+                          className="w-full h-full object-cover"
+                          muted
+                          loop
+                          playsInline
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                          <i className="fas fa-play text-white text-2xl"></i>
+                        </div>
+                        <div className="absolute top-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded-full text-xs">
+                          <i className="fas fa-play mr-1"></i>
+                          Vidéo
+                        </div>
+                      </div>
+                    ) : (
+                      <img
+                        src={image.url}
+                        alt={image.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    )}
+                    
+                    {/* Overlay au survol */}
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i className="fas fa-search-plus text-white text-2xl"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Titre de l'image */}
+                  {image.title && (
+                    <div className="p-2">
+                      <p className="text-xs text-gray-700 truncate font-medium">
+                        {image.title}
+                      </p>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                          {g.categories[image.category] || image.category}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(image.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Grille des images statiques */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {itemsFiltered.map((item) => (
             <div

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { dataManager } from '../utils/dataManager';
+import CloudinaryService from '../utils/cloudinaryService';
 
 const EventManager = ({ onClose }) => {
   const [events, setEvents] = useState({ upcoming: [], past: [] });
@@ -15,6 +16,8 @@ const EventManager = ({ onClose }) => {
     image: '🎉',
     imageFile: null
   });
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
 
   // Fonction pour déterminer la catégorie de l'événement selon la date
   const getEventCategory = (date) => {
@@ -35,31 +38,51 @@ const EventManager = ({ onClose }) => {
     setEvents({ upcoming, past });
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      // Vérifier la taille du fichier (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('L\'image est trop volumineuse. Veuillez choisir une image de moins de 5MB.');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target.result;
-        console.log('Image chargée:', result.substring(0, 50) + '...');
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner un fichier image valide (JPG, PNG, GIF, etc.)');
+      return;
+    }
+
+    // Valider la taille du fichier
+    const validation = CloudinaryService.validateFileSize(file, 10); // 10MB max
+    if (!validation.valid) {
+      alert(`L'image est trop volumineuse (${validation.sizeMB}MB). Taille maximum: 10MB`);
+      return;
+    }
+
+    setUploadingImage(true);
+    setUploadStatus('Upload de l\'image...');
+
+    try {
+      const uploadResult = await CloudinaryService.uploadImage(file, {
+        folder: 'cice-edmonton/events',
+        uploadPreset: 'cice_edmonton',
+        width: 400,
+        height: 300,
+        crop: 'fill'
+      });
+
+      if (uploadResult.success) {
         setFormData({
           ...formData,
-          image: result,
+          image: uploadResult.data.secure_url,
           imageFile: file
         });
-      };
-      reader.onerror = () => {
-        alert('Erreur lors du chargement de l\'image. Veuillez réessayer.');
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert('Veuillez sélectionner un fichier image valide (JPG, PNG, GIF, etc.)');
+        setUploadStatus('✅ Image uploadée avec succès !');
+      } else {
+        alert(`Erreur lors de l'upload: ${uploadResult.error}`);
+        setUploadStatus('❌ Erreur lors de l\'upload');
+      }
+    } catch (error) {
+      console.error('Erreur upload:', error);
+      alert('Erreur lors de l\'upload de l\'image');
+      setUploadStatus('❌ Erreur lors de l\'upload');
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -294,8 +317,18 @@ const EventManager = ({ onClose }) => {
                     </label>
                   </div>
                   
+                  {/* Statut d'upload */}
+                  {uploadingImage && (
+                    <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <i className="fas fa-spinner fa-spin text-blue-500"></i>
+                        <span className="text-sm text-blue-700">{uploadStatus}</span>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Aperçu de l'image */}
-                  {formData.image && formData.image.startsWith('data:') && (
+                  {formData.image && (formData.image.startsWith('data:') || formData.image.startsWith('https://')) && (
                     <div className="mt-2">
                       <p className="text-sm text-gray-600 mb-2">Aperçu :</p>
                       <img
@@ -303,6 +336,9 @@ const EventManager = ({ onClose }) => {
                         alt="Aperçu"
                         className="w-16 h-16 rounded-lg object-cover border border-gray-300"
                       />
+                      {uploadStatus && !uploadingImage && (
+                        <p className="text-xs text-green-600 mt-1">{uploadStatus}</p>
+                      )}
                     </div>
                   )}
                   

@@ -26,7 +26,11 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             {/* === BRAND (Desktop) === */}
-            <div className="flex items-center space-x-3">
+            <button 
+              onClick={() => setCurrentPage('home')}
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+              aria-label="Retour à l'accueil"
+            >
               {/* Drapeau rond */}
               <div className="w-12 h-12 flag-gradient rounded-full animate-pulse-slow shadow-lg" />
 
@@ -41,7 +45,7 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
                 <span className="text-2xl font-bold gradient-text">CICE</span>
                 <p className="text-xs text-gray-600">Edmonton</p>
               </div>
-            </div>
+            </button>
 
             {/* === NAV ITEMS (Desktop) === */}
             <div className="hidden lg:flex space-x-1">
@@ -112,7 +116,14 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
         >
           <div className="p-6">
             {/* BRAND (Mobile) */}
-            <div className="flex items-center space-x-3 mb-8">
+            <button 
+              onClick={() => {
+                setCurrentPage('home');
+                setMobileMenuOpen(false);
+              }}
+              className="flex items-center space-x-3 mb-8 hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+              aria-label="Retour à l'accueil"
+            >
               <div className="w-12 h-12 flag-gradient rounded-full" />
               <img
                 src="/img/logocice.png"
@@ -123,7 +134,7 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
                 <span className="text-2xl font-bold gradient-text">CICE</span>
                 <p className="text-xs text-gray-600">Edmonton</p>
               </div>
-            </div>
+            </button>
 
             {/* NAV ITEMS Mobile */}
             <div className="space-y-2">

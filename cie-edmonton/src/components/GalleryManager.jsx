@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { dataManager } from '../utils/dataManager';
+import CloudinaryService from '../utils/cloudinaryService';
 
 const GalleryManager = ({ onClose }) => {
   const [images, setImages] = useState([]);
@@ -10,6 +11,8 @@ const GalleryManager = ({ onClose }) => {
   const [imageDescription, setImageDescription] = useState('');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState('');
 
   // Catégories disponibles pour la galerie
   const categories = [
@@ -33,42 +36,104 @@ const GalleryManager = ({ onClose }) => {
 
   const handleFileSelection = (e) => {
     const files = Array.from(e.target.files);
-    const imageFiles = files.filter(file => file.type.startsWith('image/'));
-    setSelectedFiles(imageFiles);
+    const mediaFiles = files.filter(file => 
+      file.type.startsWith('image/') || file.type.startsWith('video/')
+    );
+    
+    // Valider la taille des fichiers
+    const validFiles = mediaFiles.filter(file => {
+      const validation = CloudinaryService.validateFileSize(file, 50); // 50MB max
+      if (!validation.valid) {
+        alert(`Le fichier ${file.name} est trop volumineux (${validation.sizeMB}MB). Taille maximum: 50MB`);
+        return false;
+      }
+      return true;
+    });
+    
+    setSelectedFiles(validFiles);
     setShowPreview(true);
   };
 
   const handleConfirmUpload = async () => {
     setUploading(true);
+    setUploadProgress(0);
+    setUploadStatus('Préparation de l\'upload...');
 
-    for (const file of selectedFiles) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageData = {
-          title: imageTitle || file.name.split('.')[0],
-          description: imageDescription,
-          url: e.target.result,
-          filename: file.name,
-          size: file.size,
-          type: file.type,
-          category: selectedCategory,
-          createdAt: new Date().toISOString()
-        };
+    try {
+      const totalFiles = selectedFiles.length;
+      let uploadedCount = 0;
+
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        setUploadStatus(`Upload de ${file.name}... (${i + 1}/${totalFiles})`);
+
+        let uploadResult;
         
-        dataManager.addImage(imageData);
-        loadImages();
-      };
-      reader.readAsDataURL(file);
-    }
+        if (CloudinaryService.isVideo(file)) {
+          uploadResult = await CloudinaryService.uploadVideo(file, {
+            folder: `cice-edmonton/gallery/${selectedCategory}`,
+            uploadPreset: 'cice_edmonton'
+          });
+        } else {
+          uploadResult = await CloudinaryService.uploadImage(file, {
+            folder: `cice-edmonton/gallery/${selectedCategory}`,
+            uploadPreset: 'cice_edmonton',
+            width: 'auto',
+            height: 'auto',
+            crop: 'fill'
+          });
+        }
 
-    setUploading(false);
-    setShowUpload(false);
-    setShowPreview(false);
-    // Reset form
-    setImageTitle('');
-    setImageDescription('');
-    setSelectedCategory('events');
-    setSelectedFiles([]);
+        if (uploadResult.success) {
+          const mediaData = {
+            title: imageTitle || file.name.split('.')[0],
+            description: imageDescription,
+            url: uploadResult.data.secure_url,
+            public_id: uploadResult.data.public_id,
+            filename: file.name,
+            size: uploadResult.data.bytes,
+            type: file.type,
+            category: selectedCategory,
+            isVideo: CloudinaryService.isVideo(file),
+            width: uploadResult.data.width,
+            height: uploadResult.data.height,
+            duration: uploadResult.data.duration || null,
+            createdAt: new Date().toISOString()
+          };
+          
+          dataManager.addImage(mediaData);
+          uploadedCount++;
+        } else {
+          console.error(`Erreur upload ${file.name}:`, uploadResult.error);
+          alert(`Erreur lors de l'upload de ${file.name}: ${uploadResult.error}`);
+        }
+
+        // Mettre à jour la progression
+        setUploadProgress(((i + 1) / totalFiles) * 100);
+      }
+
+      setUploadStatus(`✅ ${uploadedCount}/${totalFiles} fichiers uploadés avec succès !`);
+      
+      // Attendre un peu avant de fermer
+      setTimeout(() => {
+        loadImages();
+        setUploading(false);
+        setShowUpload(false);
+        setShowPreview(false);
+        setUploadProgress(0);
+        setUploadStatus('');
+        // Reset form
+        setImageTitle('');
+        setImageDescription('');
+        setSelectedCategory('events');
+        setSelectedFiles([]);
+      }, 2000);
+
+    } catch (error) {
+      console.error('Erreur lors de l\'upload:', error);
+      setUploadStatus(`❌ Erreur: ${error.message}`);
+      setUploading(false);
+    }
   };
 
   const handleValidateAndSend = async () => {
@@ -144,11 +209,30 @@ const GalleryManager = ({ onClose }) => {
   const ImageCard = ({ image }) => (
     <div className="relative group bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="aspect-square overflow-hidden">
-        <img
-          src={image.url}
-          alt={image.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+        {image.isVideo ? (
+          <video
+            src={image.url}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            controls={false}
+            muted
+            loop
+            playsInline
+          />
+        ) : (
+          <img
+            src={image.url}
+            alt={image.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        )}
+        
+        {/* Indicateur vidéo */}
+        {image.isVideo && (
+          <div className="absolute top-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded-full text-xs">
+            <i className="fas fa-play mr-1"></i>
+            Vidéo
+          </div>
+        )}
       </div>
       
       {/* Overlay avec actions */}
@@ -273,7 +357,7 @@ const GalleryManager = ({ onClose }) => {
           <input
             type="file"
             multiple
-            accept="image/*"
+            accept="image/*,video/*"
             onChange={handleFileSelection}
             className="hidden"
             id="imageUpload"
@@ -286,7 +370,7 @@ const GalleryManager = ({ onClose }) => {
               className="inline-block px-6 py-3 rounded-lg cursor-pointer transition-colors bg-orange-500 text-white hover:bg-orange-600"
             >
               <i className="fas fa-upload mr-2"></i>
-              Sélectionner des images
+              Sélectionner des images/vidéos
             </label>
             
             <button
@@ -378,6 +462,25 @@ const GalleryManager = ({ onClose }) => {
             </div>
           </div>
           
+          {/* Barre de progression */}
+          {uploading && (
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">Progression</span>
+                <span className="text-sm text-gray-500">{Math.round(uploadProgress)}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-orange-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+              </div>
+              {uploadStatus && (
+                <p className="text-sm text-gray-600 mt-2 text-center">{uploadStatus}</p>
+              )}
+            </div>
+          )}
+
           {/* Boutons d'action */}
           <div className="flex justify-center space-x-4">
             <button
@@ -392,12 +495,12 @@ const GalleryManager = ({ onClose }) => {
               {uploading ? (
                 <>
                   <i className="fas fa-spinner fa-spin mr-2"></i>
-                  Ajout en cours...
+                  Upload en cours...
                 </>
               ) : (
                 <>
                   <i className="fas fa-check mr-2"></i>
-                  Valider et ajouter
+                  Valider et uploader
                 </>
               )}
             </button>
