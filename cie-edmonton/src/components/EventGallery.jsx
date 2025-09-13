@@ -369,6 +369,27 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
           const result = await dataManager.addEventMedia(eventIdentifier, mediaData, eventType);
           console.log('Résultat ajout:', result);
           
+          // AUSSI ajouter à la galerie principale pour que le compteur "Images Cloudinary" fonctionne
+          const galleryImageData = {
+            title: mediaData.name || `Image ${eventIdentifier}`,
+            description: mediaData.description || '',
+            url: mediaData.cloudinaryUrl,
+            public_id: mediaData.cloudinaryPublicId,
+            filename: mediaData.name,
+            size: mediaData.fileSize,
+            type: mediaData.mimeType,
+            category: 'events', // Catégorie par défaut
+            isVideo: mediaData.type === 'video',
+            width: uploadResult.data.width,
+            height: uploadResult.data.height,
+            duration: uploadResult.data.duration || null,
+            createdAt: mediaData.uploadedAt
+          };
+          
+          // Ajouter à la galerie principale
+          dataManager.addImage(galleryImageData);
+          console.log('✅ Image ajoutée à la galerie principale');
+          
           // Recharger les médias
           await loadMedia();
           
