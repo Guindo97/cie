@@ -144,7 +144,6 @@ export const translations = {
         ],
         past: [
           { key: "barbecueAccueil2025", title: "Barbecue d'accueil des nouveaux arrivants", date: "30 août 2024", participants: "90 personnes", image: "/img/1.jpg", description: "Célébration d'accueil pour les nouveaux arrivants ivoiriens à Edmonton avec réseautage, conseils d'insertion et partage d'expériences." },
-          { key: "openHouseDay", title: "Journée Portes Ouvertes", date: "12 mai 2024", participants: "85 personnes", image: "🏠" },
           { key: "easterFestival", title: "Festival de Pâques", date: "31 mars 2024", participants: "120 personnes", image: "🐰" },
           { key: "yearEndGala", title: "Gala de Fin d'Année", date: "16 décembre 2023", participants: "200 personnes", image: "✨" }
         ]
@@ -441,7 +440,6 @@ export const translations = {
         ],
         past: [
           { key: "barbecueAccueil2025", title: "Welcome BBQ for Newcomers", date: "August 30, 2024", participants: "90 people", image: "/img/1.jpg", description: "Welcome celebration for new Ivorian arrivals in Edmonton with networking, integration advice and experience sharing." },
-          { key: "openHouseDay", title: "Open House Day", date: "May 12, 2024", participants: "85 people", image: "🏠" },
           { key: "easterFestival", title: "Easter Festival", date: "March 31, 2024", participants: "120 people", image: "🐰" },
           { key: "yearEndGala", title: "Year-End Gala", date: "December 16, 2023", participants: "200 people", image: "✨" }
         ]
