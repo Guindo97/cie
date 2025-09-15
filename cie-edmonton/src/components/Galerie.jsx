@@ -205,7 +205,9 @@ const Galerie = ({ t }) => {
          <img
            src={meta(item.key).image}
            alt={meta(item.key).title}
-           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+           className={`w-full h-full transition-transform duration-300 hover:scale-105 ${
+             item.key === 'weddingCeremony' ? 'object-contain' : 'object-cover'
+           }`}
            onLoad={(e) => {
              console.log('✅ Image locale chargée avec succès:', meta(item.key).image);
              e.target.style.display = 'block';
@@ -230,7 +232,9 @@ const Galerie = ({ t }) => {
          <img
            src={getCloudinaryImageUrl(item.key)}
            alt={meta(item.key).title || item.key}
-           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+           className={`w-full h-full transition-transform duration-300 hover:scale-105 ${
+             item.key === 'weddingCeremony' ? 'object-contain' : 'object-cover'
+           }`}
            onLoad={(e) => {
              console.log('✅ Image Cloudinary chargée avec succès:', getCloudinaryImageUrl(item.key));
              e.target.style.display = 'block';
