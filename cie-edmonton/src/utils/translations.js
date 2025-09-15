@@ -222,7 +222,6 @@ export const translations = {
           title: "Match de Football",
           image: "/img/foot.png"
         },
-        musicConcert: { title: "Concert de Musique" },
         africanMarket: { 
           title: "Marché Africain",
           image: "/img/marché.jpg"
@@ -478,7 +477,6 @@ export const translations = {
           title: "Football Match",
           image: "/img/foot.png"
         },
-        musicConcert: { title: "Music Concert" },
         africanMarket: { 
           title: "African Market",
           image: "/img/marché.jpg"

@@ -30,7 +30,6 @@ const Galerie = ({ t }) => {
     { key: "kidsFestival", category: "family", emoji: "👶" },
     { key: "weddingCeremony", category: "celebrations", emoji: "💒" },
     { key: "footballMatch", category: "sport", emoji: "⚽" },
-    { key: "musicConcert", category: "culture", emoji: "🎵" },
   ];
 
   const [selectedCategoryKey, setSelectedCategoryKey] = useState("all");
