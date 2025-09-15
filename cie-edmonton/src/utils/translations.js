@@ -271,7 +271,9 @@ export const translations = {
         successMessage: "Image ajoutée avec succès !",
         errorMessage: "Erreur lors de l'ajout de l'image",
         maxSize: "Taille maximale : 50MB",
-        supportedFormats: "Formats supportés : JPG, PNG, GIF, MP4, MOV"
+        supportedFormats: "Formats supportés : JPG, PNG, GIF, MP4, MOV",
+        noMedia: "Aucun média pour cet événement",
+        adminOnly: "Seuls les administrateurs peuvent ajouter des médias"
       },
       events: {
         title: "Gestion des Événements",
@@ -563,7 +565,9 @@ export const translations = {
         successMessage: "Image added successfully!",
         errorMessage: "Error adding image",
         maxSize: "Maximum size: 50MB",
-        supportedFormats: "Supported formats: JPG, PNG, GIF, MP4, MOV"
+        supportedFormats: "Supported formats: JPG, PNG, GIF, MP4, MOV",
+        noMedia: "No media for this event",
+        adminOnly: "Only administrators can add media"
       },
       events: {
         title: "Events Management",
