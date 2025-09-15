@@ -420,6 +420,7 @@ const Galerie = ({ t }) => {
           onClose={closeEventGallery}
           isAdmin={isAdmin}
           onAdminAuth={checkAdminAuth}
+          t={t}
         />
       )}
     </div>

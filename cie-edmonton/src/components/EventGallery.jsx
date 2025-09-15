@@ -6,7 +6,7 @@ import FirebaseService from '../utils/firebaseService';
 
 const ADMIN_PASSWORD = 'cice2025';
 
-const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = false, onAdminAuth }) => {
+const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = false, onAdminAuth, t }) => {
   const [media, setMedia] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
@@ -548,7 +548,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
           {media.length === 0 ? (
             <div className="text-center py-12">
               <i className="fas fa-images text-6xl text-gray-300 mb-4"></i>
-              <p className="text-gray-500 text-lg">Aucun média pour cet événement</p>
+              <p className="text-gray-500 text-lg">{t?.admin?.gallery?.noMedia || "Aucun média pour cet événement"}</p>
               {isAdmin ? (
                 <button
                   onClick={() => setShowUpload(true)}
@@ -558,7 +558,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                 </button>
               ) : (
                 <p className="text-gray-400 text-sm mt-2">
-                  Seuls les administrateurs peuvent ajouter des médias
+                  {t?.admin?.gallery?.adminOnly || "Seuls les administrateurs peuvent ajouter des médias"}
                 </p>
               )}
             </div>
