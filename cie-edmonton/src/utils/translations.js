@@ -214,7 +214,10 @@ export const translations = {
           title: "Festival des Enfants",
           image: "/img/enfants.png"
         },
-        weddingCeremony: { title: "Cérémonie de Mariage" },
+        weddingCeremony: { 
+          title: "Cérémonie de Mariage",
+          image: "/img/mariage.png"
+        },
         footballMatch: { title: "Match de Football" },
         musicConcert: { title: "Concert de Musique" },
         africanMarket: { 
@@ -464,7 +467,10 @@ export const translations = {
           title: "Children's Festival",
           image: "/img/enfants.png"
         },
-        weddingCeremony: { title: "Wedding Ceremony" },
+        weddingCeremony: { 
+          title: "Wedding Ceremony",
+          image: "/img/mariage.png"
+        },
         footballMatch: { title: "Football Match" },
         musicConcert: { title: "Music Concert" },
         africanMarket: { 
