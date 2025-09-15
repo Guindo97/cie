@@ -216,7 +216,7 @@ export const translations = {
         },
         weddingCeremony: { 
           title: "Cérémonie de Mariage",
-          image: "/img/mariage.png"
+          image: "/img/weeding.png"
         },
         footballMatch: { title: "Match de Football" },
         musicConcert: { title: "Concert de Musique" },
@@ -469,7 +469,7 @@ export const translations = {
         },
         weddingCeremony: { 
           title: "Wedding Ceremony",
-          image: "/img/mariage.png"
+          image: "/img/weeding.png"
         },
         footballMatch: { title: "Football Match" },
         musicConcert: { title: "Music Concert" },
