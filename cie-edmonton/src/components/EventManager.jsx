@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { dataManager } from '../utils/dataManager';
 import CloudinaryService from '../utils/cloudinaryService';
 
-const EventManager = ({ onClose }) => {
+const EventManager = ({ onClose, t }) => {
   const [events, setEvents] = useState({ upcoming: [], past: [] });
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -218,7 +218,7 @@ const EventManager = ({ onClose }) => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
               <h3 className="text-2xl font-bold text-gray-800">
-                {editingEvent ? 'Modifier l\'événement' : 'Ajouter un événement'}
+                {editingEvent ? (t?.admin?.events?.editEvent || 'Modifier l\'événement') : (t?.admin?.events?.addEvent || 'Ajouter un événement')}
               </h3>
               <button
                 onClick={resetForm}
@@ -418,14 +418,14 @@ const EventManager = ({ onClose }) => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">
           <i className="fas fa-calendar-plus mr-3 text-orange-500"></i>
-          Gestion des Événements
+          {t?.admin?.events?.title || "Gestion des Événements"}
         </h2>
         <button
           onClick={() => setShowForm(true)}
           className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center space-x-2"
         >
           <i className="fas fa-plus"></i>
-          <span>Ajouter un événement</span>
+          <span>{t?.admin?.events?.addEvent || "Ajouter un événement"}</span>
         </button>
       </div>
 
@@ -434,11 +434,11 @@ const EventManager = ({ onClose }) => {
         <div>
           <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <i className="fas fa-clock mr-2 text-green-500"></i>
-            Événements à venir ({events.upcoming.length})
+            {t?.events?.upcoming || "Événements à venir"} ({events.upcoming.length})
           </h3>
           <div className="space-y-4">
             {events.upcoming.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">Aucun événement à venir</p>
+              <p className="text-gray-500 text-center py-8">{t?.events?.noUpcoming || "Aucun événement à venir"}</p>
             ) : (
               events.upcoming.map(event => (
                 <EventCard key={event.id} event={event} type="upcoming" />
@@ -451,11 +451,11 @@ const EventManager = ({ onClose }) => {
         <div>
           <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <i className="fas fa-history mr-2 text-gray-500"></i>
-            Événements passés ({events.past.length})
+            {t?.events?.past || "Événements passés"} ({events.past.length})
           </h3>
           <div className="space-y-4">
             {events.past.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">Aucun événement passé</p>
+              <p className="text-gray-500 text-center py-8">{t?.events?.noPast || "Aucun événement passé"}</p>
             ) : (
               events.past.map(event => (
                 <EventCard key={event.id} event={event} type="past" />

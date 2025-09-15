@@ -153,7 +153,7 @@ const Admin = ({ t, language, setCurrentPage }) => {
         {/* Contenu des onglets */}
         {activeTab === 'events' && (
           <div className="bg-white rounded-2xl shadow-xl p-8">
-            <EventManager />
+            <EventManager t={t} />
           </div>
         )}
 

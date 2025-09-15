@@ -75,6 +75,8 @@ export const translations = {
       subtitle: "Célébrons ensemble notre culture",
       upcoming: "Événements à venir",
       past: "Événements passés",
+      noUpcoming: "Aucun événement à venir",
+      noPast: "Aucun événement passé",
       register: "S'inscrire",
       form: {
         title: "Inscription à l'événement",
@@ -370,6 +372,8 @@ export const translations = {
       subtitle: "Let's celebrate our culture together",
       upcoming: "Upcoming Events",
       past: "Past Events",
+      noUpcoming: "No upcoming events",
+      noPast: "No past events",
       register: "Register",
       form: {
         title: "Event Registration",
