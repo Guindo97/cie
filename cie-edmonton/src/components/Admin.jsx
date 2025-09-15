@@ -19,7 +19,7 @@ const Admin = ({ t, language, setCurrentPage }) => {
       // Sauvegarder l'état de connexion
       localStorage.setItem('adminLoggedIn', 'true');
     } else {
-      setLoginError('Mot de passe incorrect');
+      setLoginError(t?.admin?.login?.errorMessage || 'Mot de passe incorrect');
     }
   };
 
@@ -46,21 +46,21 @@ const Admin = ({ t, language, setCurrentPage }) => {
               <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i className="fas fa-shield-alt text-white text-2xl"></i>
               </div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">Administration</h1>
-              <p className="text-gray-600">Accès réservé à l'équipe du bureau</p>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">{t?.admin?.title || "Administration"}</h1>
+              <p className="text-gray-600">{t?.admin?.subtitle || "Accès réservé à l'équipe du bureau"}</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Mot de passe
+                  {t?.admin?.password || "Mot de passe"}
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  placeholder="Entrez le mot de passe"
+                  placeholder={t?.admin?.password || "Entrez le mot de passe"}
                   required
                 />
               </div>
@@ -77,7 +77,7 @@ const Admin = ({ t, language, setCurrentPage }) => {
                 className="w-full bg-gradient-to-r from-orange-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
               >
                 <i className="fas fa-sign-in-alt mr-2"></i>
-                Se connecter
+                {t?.admin?.loginButton || "Se connecter"}
               </button>
             </form>
 
@@ -87,7 +87,7 @@ const Admin = ({ t, language, setCurrentPage }) => {
                 className="text-gray-500 hover:text-gray-700 transition-colors"
               >
                 <i className="fas fa-arrow-left mr-2"></i>
-                Retour à l'accueil
+                {t?.nav?.home || "Retour à l'accueil"}
               </button>
             </div>
           </div>
@@ -103,20 +103,20 @@ const Admin = ({ t, language, setCurrentPage }) => {
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold gradient-text mb-2">Administration</h1>
-              <p className="text-gray-600 text-sm sm:text-base">Gestion du contenu du site</p>
+              <h1 className="text-3xl sm:text-4xl font-bold gradient-text mb-2">{t?.admin?.title || "Administration"}</h1>
+              <p className="text-gray-600 text-sm sm:text-base">{t?.admin?.subtitle || "Gestion du contenu du site"}</p>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
               <span className="text-xs sm:text-sm text-gray-500">
                 <i className="fas fa-user-shield mr-2"></i>
-                Connecté en tant qu'administrateur
+                {t?.admin?.connectedAs || "Connecté en tant qu'administrateur"}
               </span>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors text-sm sm:text-base w-full sm:w-auto"
               >
                 <i className="fas fa-sign-out-alt mr-2"></i>
-                Déconnexion
+                {t?.admin?.logout || "Déconnexion"}
               </button>
             </div>
           </div>
@@ -134,7 +134,7 @@ const Admin = ({ t, language, setCurrentPage }) => {
               }`}
             >
               <i className="fas fa-calendar-alt mr-2"></i>
-              Gestion des Événements
+              {t?.admin?.events?.title || "Gestion des Événements"}
             </button>
             <button
               onClick={() => setActiveTab('gallery')}
@@ -145,7 +145,7 @@ const Admin = ({ t, language, setCurrentPage }) => {
               }`}
             >
               <i className="fas fa-images mr-2"></i>
-              Gestion de la Galerie
+              {t?.admin?.gallery?.title || "Gestion de la Galerie"}
             </button>
           </div>
         </div>

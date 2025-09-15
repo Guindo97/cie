@@ -259,6 +259,8 @@ export const translations = {
       password: "Mot de passe",
       loginButton: "Se connecter",
       logout: "Déconnexion",
+      connectedAs: "Connecté en tant qu'administrateur",
+      errorMessage: "Mot de passe incorrect",
       gallery: {
         title: "Gestion de la Galerie",
         addImage: "Ajouter une image",
@@ -553,6 +555,8 @@ export const translations = {
       password: "Password",
       loginButton: "Sign in",
       logout: "Logout",
+      connectedAs: "Connected as administrator",
+      errorMessage: "Incorrect password",
       gallery: {
         title: "Gallery Management",
         addImage: "Add Image",
