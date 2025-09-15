@@ -251,6 +251,42 @@ export const translations = {
         send: "Envoyer le message",
         titleBox: "Envoyez-nous un message"
       }
+    },
+    admin: {
+      title: "Administration",
+      subtitle: "Gestion du contenu du site",
+      login: "Connexion",
+      password: "Mot de passe",
+      loginButton: "Se connecter",
+      logout: "Déconnexion",
+      gallery: {
+        title: "Gestion de la Galerie",
+        addImage: "Ajouter une image",
+        addVideo: "Ajouter une vidéo",
+        titleLabel: "Titre",
+        descriptionLabel: "Description",
+        fileLabel: "Fichier",
+        uploadButton: "Télécharger",
+        cancelButton: "Annuler",
+        successMessage: "Image ajoutée avec succès !",
+        errorMessage: "Erreur lors de l'ajout de l'image",
+        maxSize: "Taille maximale : 50MB",
+        supportedFormats: "Formats supportés : JPG, PNG, GIF, MP4, MOV"
+      },
+      events: {
+        title: "Gestion des Événements",
+        addEvent: "Ajouter un événement",
+        editEvent: "Modifier l'événement",
+        deleteEvent: "Supprimer l'événement",
+        eventTitle: "Titre de l'événement",
+        eventDate: "Date",
+        eventLocation: "Lieu",
+        eventDescription: "Description",
+        eventImage: "Image",
+        saveButton: "Enregistrer",
+        cancelButton: "Annuler",
+        deleteConfirm: "Êtes-vous sûr de vouloir supprimer cet événement ?"
+      }
     }
   },
 
@@ -506,6 +542,42 @@ export const translations = {
         message: "Your Message",
         send: "Send Message",
         titleBox: "Send us a message"
+      }
+    },
+    admin: {
+      title: "Administration",
+      subtitle: "Website content management",
+      login: "Login",
+      password: "Password",
+      loginButton: "Sign in",
+      logout: "Logout",
+      gallery: {
+        title: "Gallery Management",
+        addImage: "Add Image",
+        addVideo: "Add Video",
+        titleLabel: "Title",
+        descriptionLabel: "Description",
+        fileLabel: "File",
+        uploadButton: "Upload",
+        cancelButton: "Cancel",
+        successMessage: "Image added successfully!",
+        errorMessage: "Error adding image",
+        maxSize: "Maximum size: 50MB",
+        supportedFormats: "Supported formats: JPG, PNG, GIF, MP4, MOV"
+      },
+      events: {
+        title: "Events Management",
+        addEvent: "Add Event",
+        editEvent: "Edit Event",
+        deleteEvent: "Delete Event",
+        eventTitle: "Event Title",
+        eventDate: "Date",
+        eventLocation: "Location",
+        eventDescription: "Description",
+        eventImage: "Image",
+        saveButton: "Save",
+        cancelButton: "Cancel",
+        deleteConfirm: "Are you sure you want to delete this event?"
       }
     }
   }
