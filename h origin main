@@ -1,0 +1,5 @@
+[33mc3825fd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Suppression: Journee Portes Ouvertes retiree des evenements
+[33m4dc9535[m Fix: Traductions EventManager - gestion evenements traduite en FR/EN
+[33m9258cba[m Fix: Traductions Admin.jsx - page administration traduite en FR/EN
+[33m73459ea[m Fix: Traductions EventGallery - messages noMedia et adminOnly traduits
+[33m0ff4db0[m Ajout: Traductions pour messages medias - noMedia et adminOnly
