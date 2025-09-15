@@ -199,7 +199,9 @@ const Galerie = ({ t }) => {
               key={item.key}
               className="card-hover bg-white rounded-2xl shadow-xl overflow-hidden"
             >
-     <div className="h-64 sm:h-80 bg-gradient-to-br from-orange-200 via-white to-green-200 flex items-center justify-center relative overflow-hidden">
+     <div className={`bg-gradient-to-br from-orange-200 via-white to-green-200 flex items-center justify-center relative overflow-hidden ${
+       item.key === 'weddingCeremony' ? 'h-72 sm:h-96' : 'h-64 sm:h-80'
+     }`}>
        {/* Images locales avec fallback Cloudinary */}
        {meta(item.key).image ? (
          <img
