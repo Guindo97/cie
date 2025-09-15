@@ -206,7 +206,7 @@ const Galerie = ({ t }) => {
            src={meta(item.key).image}
            alt={meta(item.key).title}
            className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${
-             item.key === 'weddingCeremony' ? 'object-top' : ''
+             item.key === 'weddingCeremony' || item.key === 'footballMatch' ? 'object-top' : ''
            }`}
            onLoad={(e) => {
              console.log('✅ Image locale chargée avec succès:', meta(item.key).image);
@@ -233,7 +233,7 @@ const Galerie = ({ t }) => {
            src={getCloudinaryImageUrl(item.key)}
            alt={meta(item.key).title || item.key}
            className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${
-             item.key === 'weddingCeremony' ? 'object-top' : ''
+             item.key === 'weddingCeremony' || item.key === 'footballMatch' ? 'object-top' : ''
            }`}
            onLoad={(e) => {
              console.log('✅ Image Cloudinary chargée avec succès:', getCloudinaryImageUrl(item.key));
