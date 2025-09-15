@@ -210,7 +210,10 @@ export const translations = {
           title: "Assemblée Générale",
           image: "/img/ag.png"
         },
-        kidsFestival: { title: "Festival des Enfants" },
+        kidsFestival: { 
+          title: "Festival des Enfants",
+          image: "/img/enfants.png"
+        },
         weddingCeremony: { title: "Cérémonie de Mariage" },
         footballMatch: { title: "Match de Football" },
         musicConcert: { title: "Concert de Musique" },
@@ -457,7 +460,10 @@ export const translations = {
           title: "General Assembly",
           image: "/img/ag.png"
         },
-        kidsFestival: { title: "Children's Festival" },
+        kidsFestival: { 
+          title: "Children's Festival",
+          image: "/img/enfants.png"
+        },
         weddingCeremony: { title: "Wedding Ceremony" },
         footballMatch: { title: "Football Match" },
         musicConcert: { title: "Music Concert" },
