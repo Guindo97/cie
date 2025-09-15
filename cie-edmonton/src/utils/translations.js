@@ -218,7 +218,10 @@ export const translations = {
           title: "Cérémonie de Mariage",
           image: "/img/weeding.png"
         },
-        footballMatch: { title: "Match de Football" },
+        footballMatch: { 
+          title: "Match de Football",
+          image: "/img/foot.png"
+        },
         musicConcert: { title: "Concert de Musique" },
         africanMarket: { 
           title: "Marché Africain",
@@ -471,7 +474,10 @@ export const translations = {
           title: "Wedding Ceremony",
           image: "/img/weeding.png"
         },
-        footballMatch: { title: "Football Match" },
+        footballMatch: { 
+          title: "Football Match",
+          image: "/img/foot.png"
+        },
         musicConcert: { title: "Music Concert" },
         africanMarket: { 
           title: "African Market",
