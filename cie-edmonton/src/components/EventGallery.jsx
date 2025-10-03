@@ -92,21 +92,7 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
       const allEventMedia = [...eventMedia, ...(localEventMedia || [])];
       console.log('✅ EventGallery - Total médias combinés:', allEventMedia.length);
       
-      // Charger les médias statiques depuis les traductions
-      let staticMedia = [];
-      if (event.photos && Array.isArray(event.photos)) {
-        staticMedia = event.photos.map((photo, index) => ({
-          id: `static_${eventIdentifier}_${index}`,
-          type: 'image',
-          data: photo,
-          name: `Photo ${index + 1}`,
-          description: `Photo statique ${index + 1}`,
-          isStatic: true
-        }));
-        console.log('✅ EventGallery - Médias statiques trouvés:', staticMedia);
-      }
-      
-      // Utiliser seulement les médias Firebase (pas de duplication avec les statiques)
+      // Utiliser seulement les médias Firebase (pas de médias statiques)
       const allMedia = allEventMedia;
       console.log('✅ EventGallery - Total médias:', allMedia.length);
       console.log('🔍 EventGallery - Détail des médias:', allMedia.map(m => ({
