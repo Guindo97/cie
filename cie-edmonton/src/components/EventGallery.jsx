@@ -106,8 +106,8 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         console.log('✅ EventGallery - Médias statiques trouvés:', staticMedia);
       }
       
-      // Combiner les médias Firebase, locaux et statiques
-      const allMedia = [...allEventMedia, ...staticMedia];
+      // Utiliser seulement les médias Firebase (pas de duplication avec les statiques)
+      const allMedia = allEventMedia;
       console.log('✅ EventGallery - Total médias:', allMedia.length);
       console.log('🔍 EventGallery - Détail des médias:', allMedia.map(m => ({
         id: m.id,

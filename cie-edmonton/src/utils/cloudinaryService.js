@@ -2,9 +2,9 @@
 
 // Configuration Cloudinary
 const CLOUDINARY_CONFIG = {
-  cloud_name: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dwe2qubud',
-  api_key: import.meta.env.VITE_CLOUDINARY_API_KEY || '289792115171759',
-  api_secret: import.meta.env.VITE_CLOUDINARY_API_SECRET || 'WVu4hFI0VboUZK5KTXotdNljIno',
+  cloud_name: 'dwe2qubud',
+  api_key: '289792115171759',
+  api_secret: 'WVu4hFI0VboUZK5KTXotdNljIno',
   secure: true
 };
 
