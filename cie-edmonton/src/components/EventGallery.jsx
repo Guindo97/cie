@@ -375,10 +375,16 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         const eventIdentifier = event.key || event.id;
         console.log('🗑️ Suppression avec eventIdentifier:', eventIdentifier);
         
-        const success = await dataManager.deleteEventMedia(eventIdentifier, mediaId, eventType);
-        console.log('🗑️ Résultat de la suppression:', success);
+        // Supprimer de Firebase d'abord
+        console.log('🗑️ Suppression de Firebase...');
+        const firebaseResult = await FirebaseService.deleteImage(mediaId);
+        console.log('🗑️ Résultat suppression Firebase:', firebaseResult);
         
-        if (success) {
+        // Puis supprimer localement
+        const success = await dataManager.deleteEventMedia(eventIdentifier, mediaId, eventType);
+        console.log('🗑️ Résultat de la suppression locale:', success);
+        
+        if (success || firebaseResult.success) {
           console.log('✅ Média supprimé avec succès, rechargement des médias...');
           await loadMedia();
           console.log('✅ Médias rechargés');
