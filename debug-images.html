@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Images - CICE Edmonton</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-image {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .test-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #ff6b35;
+        }
+        .status {
+            font-size: 12px;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .loading { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug des Images - CICE Edmonton</h1>
+    <p>Test de chargement des images des membres :</p>
+    
+    <div id="debug-results"></div>
+
+    <script>
+        const images = [
+            '/img/president.jpg',
+            '/img/vicepresidente.png',
+            '/img/jessica.png',
+            '/img/Nadege.png',
+            '/img/Teah.png',
+            '/img/Chantal.png',
+            '/img/Ake.png',
+            '/img/Kpolo.png',
+            '/img/Loa.png',
+            '/img/Nina.png'
+        ];
+
+        const container = document.getElementById('debug-results');
+
+        images.forEach((imagePath, index) => {
+            const div = document.createElement('div');
+            div.className = 'test-image';
+            div.innerHTML = `
+                <img src="${imagePath}" 
+                     alt="Test ${index + 1}" 
+                     onload="updateStatus(this, 'success', '✅ OK')"
+                     onerror="updateStatus(this, 'error', '❌ Erreur')">
+                <div class="status loading">🔄 Chargement...</div>
+                <div style="font-size: 10px; margin-top: 5px; color: #666;">${imagePath}</div>
+            `;
+            container.appendChild(div);
+        });
+
+        function updateStatus(img, statusClass, message) {
+            const statusDiv = img.nextElementSibling;
+            statusDiv.className = `status ${statusClass}`;
+            statusDiv.textContent = message;
+        }
+
+        // Test de connectivité générale
+        console.log('🔧 Debug démarré...');
+        console.log('📍 URL actuelle:', window.location.href);
+        console.log('🌐 Base URL:', window.location.origin);
+        console.log('📁 Images à tester:', images);
+        
+        // Test d'une requête fetch
+        fetch('/img/jessica.png')
+            .then(response => {
+                console.log('✅ Fetch test - Status:', response.status);
+                console.log('✅ Fetch test - Headers:', response.headers);
+                return response.blob();
+            })
+            .then(blob => {
+                console.log('✅ Fetch test - Blob size:', blob.size, 'bytes');
+            })
+            .catch(error => {
+                console.error('❌ Fetch test - Erreur:', error);
+            });
+    </script>
+</body>
+</html>

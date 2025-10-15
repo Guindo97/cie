@@ -68,6 +68,13 @@ export const translations = {
         communicationResponsible: "Responsable Comité communication",
         womenResponsible: "Responsable Comité des Femmes",
         vacant: "Vacant"
+      },
+      documents: {
+        title: "Documents Officiels",
+        statutesTitle: "Statuts et Règlement Intérieur",
+        description: "Consultez nos documents officiels pour connaître nos statuts, notre règlement intérieur et toutes les informations importantes sur le fonctionnement de la CICE.",
+        downloadButton: "Télécharger le Document",
+        hint: "Le document s'ouvrira dans un nouvel onglet"
       }
     },
     events: {
@@ -364,6 +371,13 @@ export const translations = {
         communicationResponsible: "Communication Committee Head",
         womenResponsible: "Women's Committee Head",
         vacant: "Vacant"
+      },
+      documents: {
+        title: "Official Documents",
+        statutesTitle: "Bylaws and Internal Regulations",
+        description: "Consult our official documents to learn about our bylaws, internal regulations, and all important information about CICE's operations.",
+        downloadButton: "Download Document",
+        hint: "The document will open in a new tab"
       }
     },
     events: {
