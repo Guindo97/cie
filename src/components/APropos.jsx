@@ -161,7 +161,17 @@ const APropos = ({ t, language }) => {
                         onLoad={() => console.log(`Image chargée: ${member.image}`)}
                         onError={(e) => {
                           console.error(`Image non trouvée: ${member.image}`);
-                          e.target.style.display = 'none';
+                          // Pour AKA Jean-Paul, afficher un fallback au lieu de cacher
+                          if (member.name === 'AKA Jean-Paul') {
+                            e.target.style.display = 'none';
+                            // Créer un élément de fallback
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-orange-100 to-green-100';
+                            fallback.textContent = '👨🏿‍💼';
+                            e.target.parentNode.appendChild(fallback);
+                          } else {
+                            e.target.style.display = 'none';
+                          }
                         }}
                       />
                     </div>
@@ -193,7 +203,17 @@ const APropos = ({ t, language }) => {
                         onLoad={() => console.log(`Image chargée: ${member.image}`)}
                         onError={(e) => {
                           console.error(`Image non trouvée: ${member.image}`);
-                          e.target.style.display = 'none';
+                          // Pour AKA Jean-Paul, afficher un fallback au lieu de cacher
+                          if (member.name === 'AKA Jean-Paul') {
+                            e.target.style.display = 'none';
+                            // Créer un élément de fallback
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-orange-100 to-green-100';
+                            fallback.textContent = '👨🏿‍💼';
+                            e.target.parentNode.appendChild(fallback);
+                          } else {
+                            e.target.style.display = 'none';
+                          }
                         }}
                       />
                     </div>
@@ -225,7 +245,17 @@ const APropos = ({ t, language }) => {
                         onLoad={() => console.log(`Image chargée: ${member.image}`)}
                         onError={(e) => {
                           console.error(`Image non trouvée: ${member.image}`);
-                          e.target.style.display = 'none';
+                          // Pour AKA Jean-Paul, afficher un fallback au lieu de cacher
+                          if (member.name === 'AKA Jean-Paul') {
+                            e.target.style.display = 'none';
+                            // Créer un élément de fallback
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-orange-100 to-green-100';
+                            fallback.textContent = '👨🏿‍💼';
+                            e.target.parentNode.appendChild(fallback);
+                          } else {
+                            e.target.style.display = 'none';
+                          }
                         }}
                       />
                     </div>
@@ -257,7 +287,17 @@ const APropos = ({ t, language }) => {
                         onLoad={() => console.log(`Image chargée: ${member.image}`)}
                         onError={(e) => {
                           console.error(`Image non trouvée: ${member.image}`);
-                          e.target.style.display = 'none';
+                          // Pour AKA Jean-Paul, afficher un fallback au lieu de cacher
+                          if (member.name === 'AKA Jean-Paul') {
+                            e.target.style.display = 'none';
+                            // Créer un élément de fallback
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-orange-100 to-green-100';
+                            fallback.textContent = '👨🏿‍💼';
+                            e.target.parentNode.appendChild(fallback);
+                          } else {
+                            e.target.style.display = 'none';
+                          }
                         }}
                       />
                     </div>
@@ -289,7 +329,17 @@ const APropos = ({ t, language }) => {
                         onLoad={() => console.log(`Image chargée: ${member.image}`)}
                         onError={(e) => {
                           console.error(`Image non trouvée: ${member.image}`);
-                          e.target.style.display = 'none';
+                          // Pour AKA Jean-Paul, afficher un fallback au lieu de cacher
+                          if (member.name === 'AKA Jean-Paul') {
+                            e.target.style.display = 'none';
+                            // Créer un élément de fallback
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-orange-100 to-green-100';
+                            fallback.textContent = '👨🏿‍💼';
+                            e.target.parentNode.appendChild(fallback);
+                          } else {
+                            e.target.style.display = 'none';
+                          }
                         }}
                       />
                     </div>
@@ -321,7 +371,17 @@ const APropos = ({ t, language }) => {
                         onLoad={() => console.log(`Image chargée: ${member.image}`)}
                         onError={(e) => {
                           console.error(`Image non trouvée: ${member.image}`);
-                          e.target.style.display = 'none';
+                          // Pour AKA Jean-Paul, afficher un fallback au lieu de cacher
+                          if (member.name === 'AKA Jean-Paul') {
+                            e.target.style.display = 'none';
+                            // Créer un élément de fallback
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-orange-100 to-green-100';
+                            fallback.textContent = '👨🏿‍💼';
+                            e.target.parentNode.appendChild(fallback);
+                          } else {
+                            e.target.style.display = 'none';
+                          }
                         }}
                       />
                     </div>
@@ -353,7 +413,17 @@ const APropos = ({ t, language }) => {
                         onLoad={() => console.log(`Image chargée: ${member.image}`)}
                         onError={(e) => {
                           console.error(`Image non trouvée: ${member.image}`);
-                          e.target.style.display = 'none';
+                          // Pour AKA Jean-Paul, afficher un fallback au lieu de cacher
+                          if (member.name === 'AKA Jean-Paul') {
+                            e.target.style.display = 'none';
+                            // Créer un élément de fallback
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-orange-100 to-green-100';
+                            fallback.textContent = '👨🏿‍💼';
+                            e.target.parentNode.appendChild(fallback);
+                          } else {
+                            e.target.style.display = 'none';
+                          }
                         }}
                       />
                     </div>
