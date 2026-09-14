@@ -7,10 +7,29 @@ const CLOUDINARY_CONFIG = {
   secure: true
 };
 
+// Vérifier la configuration Cloudinary
+const validateCloudinaryConfig = () => {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const apiKey = import.meta.env.VITE_CLOUDINARY_API_KEY;
+  
+  if (!cloudName || !apiKey || cloudName === 'votre-cloud-name' || apiKey === 'votre-api-key') {
+    console.warn('⚠️ Configuration Cloudinary manquante. Upload désactivé.');
+    return false;
+  }
+  
+  console.log('✅ Configuration Cloudinary détectée:', cloudName);
+  return true;
+};
+
 class CloudinaryService {
   // Upload d'image avec transformations (sécurisé)
   static async uploadImage(file, options = {}) {
     try {
+      // Vérifier la configuration Cloudinary
+      if (!validateCloudinaryConfig()) {
+        throw new Error('Configuration Cloudinary manquante. Veuillez configurer les variables d\'environnement.');
+      }
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset);
@@ -124,8 +143,45 @@ class CloudinaryService {
     if (!transformations.includes('q_')) transformations.push('q_auto');
     if (!transformations.includes('f_')) transformations.push('f_auto');
     
+    // Optimisations supplémentaires pour les performances
+    transformations.push('fl_progressive'); // Chargement progressif
+    transformations.push('fl_immutable_cache'); // Cache immutable
+    
     const transformString = transformations.join(',');
     return `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloud_name}/image/upload/${transformString}/${publicId}`;
+  }
+
+  // Générer une URL optimisée pour les miniatures
+  static getThumbnailUrl(publicId, size = 200) {
+    return this.getOptimizedUrl(publicId, {
+      width: size,
+      height: size,
+      crop: 'fill',
+      quality: 'auto',
+      format: 'auto'
+    });
+  }
+
+  // Générer une URL optimisée pour la galerie
+  static getGalleryUrl(publicId, size = 600) {
+    return this.getOptimizedUrl(publicId, {
+      width: size,
+      height: size,
+      crop: 'fill',
+      quality: 'auto',
+      format: 'auto'
+    });
+  }
+
+  // Générer une URL optimisée pour plein écran
+  static getFullscreenUrl(publicId, maxSize = 1200) {
+    return this.getOptimizedUrl(publicId, {
+      width: maxSize,
+      height: maxSize,
+      crop: 'limit',
+      quality: 'auto',
+      format: 'auto'
+    });
   }
 }
 

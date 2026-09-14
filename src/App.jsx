@@ -9,6 +9,7 @@ import Galerie from './components/Galerie';
 import Contact from './components/Contact';
 import Admin from './components/Admin';
 import Footer from './components/Footer';
+import ErrorBoundary from './components/ErrorBoundary';
 import { translations } from './utils/translations';
 import './App.css';
 
@@ -45,23 +46,25 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navigation
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        language={language}
-        setLanguage={setLanguage}
-        t={t}
-      />
-      <div className="flex-1">
-        {renderPage()}
+    <ErrorBoundary>
+      <div className="min-h-screen flex flex-col">
+        <Navigation
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          language={language}
+          setLanguage={setLanguage}
+          t={t}
+        />
+        <div className="flex-1">
+          {renderPage()}
+        </div>
+        <Footer 
+          t={t} 
+          language={language} 
+          setCurrentPage={setCurrentPage} 
+        />
       </div>
-      <Footer 
-        t={t} 
-        language={language} 
-        setCurrentPage={setCurrentPage} 
-      />
-    </div>
+    </ErrorBoundary>
   );
 };
 

@@ -50,6 +50,14 @@ class FirebaseService {
       return images;
     } catch (error) {
       console.error("❌ Erreur récupération images Firebase:", error);
+      
+      // Si erreur de permissions, retourner un tableau vide sans casser l'app
+      if (error.code === 'permission-denied' || error.message.includes('permissions')) {
+        console.warn("⚠️ Permissions Firebase insuffisantes, utilisation du mode local uniquement");
+        return [];
+      }
+      
+      // Pour les autres erreurs, retourner aussi un tableau vide
       return [];
     }
   }

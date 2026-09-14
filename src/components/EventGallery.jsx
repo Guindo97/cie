@@ -3,6 +3,9 @@ import { dataManager } from '../utils/dataManager';
 import indexedDBManager from '../utils/indexedDBManager';
 import CloudinaryService from '../utils/cloudinaryService';
 import FirebaseService from '../utils/firebaseService';
+import imageCache from '../utils/imageCache';
+import OptimizedImage from './OptimizedImage';
+import CloudinaryStatus from './CloudinaryStatus';
 
 const ADMIN_PASSWORD = 'cice2025';
 
@@ -120,6 +123,11 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         firebaseUrl: m.url ? m.url.substring(0, 50) + '...' : 'null'
       })));
       setMedia(allMedia);
+      
+      // Preload des médias après le chargement
+      if (allMedia.length > 0) {
+        imageCache.preloadImages(allMedia, 'medium');
+      }
     } catch (error) {
       console.error('❌ EventGallery - Erreur lors du chargement des médias:', error);
       setMedia([]);
@@ -357,7 +365,15 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         console.error('Erreur lors de l\'upload Cloudinary:', error);
         setUploadStatus(`❌ Erreur: ${error.message}`);
         setUploading(false);
-        alert(`Erreur lors de l'upload: ${error.message}`);
+        
+        // Message d'erreur plus informatif
+        if (error.message.includes('Configuration Cloudinary manquante')) {
+          alert('Configuration Cloudinary manquante.\n\nL\'upload est désactivé. L\'application fonctionne en mode local uniquement.\n\nPour activer l\'upload, configurez les variables d\'environnement Cloudinary.');
+        } else if (error.message.includes('Unknown API key')) {
+          alert('Clé API Cloudinary invalide.\n\nVeuillez vérifier votre configuration Cloudinary dans le fichier .env');
+        } else {
+          alert(`Erreur lors de l'upload: ${error.message}`);
+        }
       }
     }
   };
@@ -564,25 +580,19 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
-              {media.map((mediaItem) => (
+              {media && media.length > 0 ? media.map((mediaItem, index) => (
                 <div key={mediaItem.id} className="relative group">
                   <div
                     className="aspect-square bg-gray-100 rounded-xl overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300"
                     onClick={() => openLightbox(mediaItem)}
                   >
                     {mediaItem.type === 'image' ? (
-                      <img
-                        src={mediaItem.url || mediaItem.cloudinaryUrl || mediaItem.data}
+                      <OptimizedImage
+                        image={mediaItem}
+                        size="small"
+                        className="w-full h-full"
                         alt={mediaItem.description || mediaItem.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          // Fallback vers Cloudinary puis local si Firebase échoue
-                          if (mediaItem.url && mediaItem.cloudinaryUrl && mediaItem.url !== mediaItem.cloudinaryUrl) {
-                            e.target.src = mediaItem.cloudinaryUrl;
-                          } else if (mediaItem.cloudinaryUrl && mediaItem.data && mediaItem.cloudinaryUrl !== mediaItem.data) {
-                            e.target.src = mediaItem.data;
-                          }
-                        }}
+                        priority={index < 8} // Priorité pour les 8 premiers médias
                       />
                     ) : (
                       <div className="relative w-full h-full">
@@ -676,7 +686,11 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
                     </p>
                   )}
                 </div>
-              ))}
+              )) : (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-gray-500">Aucun média disponible</p>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -808,17 +822,12 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
               {/* Média principal */}
               <div className="w-full h-full flex items-center justify-center">
                 {selectedMedia.type === 'image' ? (
-                  <img
-                    src={selectedMedia.cloudinaryUrl || selectedMedia.data}
-                    alt={selectedMedia.description || selectedMedia.name}
+                  <OptimizedImage
+                    image={selectedMedia}
+                    size="large"
                     className="max-w-full max-h-full w-auto h-auto object-contain"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                    onError={(e) => {
-                      // Fallback vers l'URL locale si Cloudinary échoue
-                      if (selectedMedia.cloudinaryUrl && selectedMedia.data !== selectedMedia.cloudinaryUrl) {
-                        e.target.src = selectedMedia.data;
-                      }
-                    }}
+                    alt={selectedMedia.description || selectedMedia.name}
+                    priority={true}
                   />
                 ) : (
                   <video
@@ -908,6 +917,8 @@ const EventGallery = ({ event, eventType, onClose, isAdmin: initialIsAdmin = fal
         </div>
       )}
 
+      {/* Statut Cloudinary */}
+      <CloudinaryStatus isVisible={isAdmin} />
     </div>
   );
 };

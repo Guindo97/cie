@@ -1,5 +1,6 @@
 // src/components/Navigation.jsx
 import React, { useEffect, useState } from 'react';
+import IconWithFallback from './IconWithFallback';
 
 const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,12 +13,12 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
   }, [mobileMenuOpen]);
 
   const navItems = [
-    { key: 'home', label: t.nav.home, icon: 'fas fa-home' },
-    { key: 'about', label: t.nav.about, icon: 'fas fa-users' },
-    { key: 'events', label: t.nav.events, icon: 'fas fa-calendar' },
-    { key: 'services', label: t.nav.services, icon: 'fas fa-hands-helping' },
-    { key: 'gallery', label: t.nav.gallery, icon: 'fas fa-images' },
-    { key: 'contact', label: t.nav.contact, icon: 'fas fa-envelope' }
+    { key: 'home', label: t.nav.home, icon: 'fas fa-home', emoji: '🏠' },
+    { key: 'about', label: t.nav.about, icon: 'fas fa-users', emoji: '👥' },
+    { key: 'events', label: t.nav.events, icon: 'fas fa-calendar', emoji: '📅' },
+    { key: 'services', label: t.nav.services, icon: 'fas fa-hands-helping', emoji: '🤝' },
+    { key: 'gallery', label: t.nav.gallery, icon: 'fas fa-images', emoji: '🖼️' },
+    { key: 'contact', label: t.nav.contact, icon: 'fas fa-envelope', emoji: '📧' }
   ];
 
   return (
@@ -60,7 +61,12 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
                   }`}
                   aria-current={currentPage === item.key ? 'page' : undefined}
                 >
-                  <i className={item.icon} aria-hidden="true"></i>
+                  <IconWithFallback 
+                    iconClass={item.icon}
+                    emoji={item.emoji}
+                    className="mr-2"
+                    ariaLabel={item.label}
+                  />
                   <span>{item.label}</span>
                 </button>
               ))}
@@ -84,7 +90,12 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                 aria-label="Changer de langue"
               >
-                <i className="fas fa-globe mr-2" aria-hidden="true"></i>
+                <IconWithFallback 
+                  iconClass="fas fa-globe"
+                  emoji="🌐"
+                  className="mr-2"
+                  ariaLabel="Langue"
+                />
                 {language === 'fr' ? 'EN' : 'FR'}
               </button>
 
@@ -151,7 +162,12 @@ const Navigation = ({ currentPage, setCurrentPage, language, setLanguage, t }) =
                       : 'text-gray-700 hover:bg-orange-50'
                   }`}
                 >
-                  <i className={item.icon} aria-hidden="true"></i>
+                  <IconWithFallback 
+                    iconClass={item.icon}
+                    emoji={item.emoji}
+                    className="mr-2"
+                    ariaLabel={item.label}
+                  />
                   <span>{item.label}</span>
                 </button>
               ))}

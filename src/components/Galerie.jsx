@@ -3,6 +3,7 @@ import { dataManager } from '../utils/dataManager';
 import EventGallery from './EventGallery';
 import CloudinaryService from '../utils/cloudinaryService';
 import FirebaseService from '../utils/firebaseService';
+import ErrorBoundary from './ErrorBoundary';
 
 const Galerie = ({ t }) => {
   const g = t.gallery;
@@ -124,14 +125,21 @@ const Galerie = ({ t }) => {
   useEffect(() => {
     const loadUploadedImages = async () => {
       try {
-        // Récupérer les images depuis Firebase (pour TOUS les utilisateurs)
-        const firebaseImages = await FirebaseService.getImages();
-        console.log('🔍 Galerie - Images Firebase récupérées:', firebaseImages.length);
+        // Firebase est déjà configuré dans firebaseService.js
+        console.log('🔥 Mode Firebase - Chargement des images...');
         
-        // NE PAS afficher les images Firebase dans la galerie principale
-        // Elles seront affichées seulement dans EventGallery ("Voir plus")
-        setUploadedImages([]);
-        console.log('✅ Galerie - Images Firebase masquées dans la galerie principale');
+        // Récupérer les images depuis Firebase (pour TOUS les utilisateurs)
+        let firebaseImages = [];
+        try {
+          firebaseImages = await FirebaseService.getImages();
+          console.log('🔍 Galerie - Images Firebase récupérées:', firebaseImages.length);
+        } catch (error) {
+          console.log('⚠️ Firebase non disponible, utilisation du mode local uniquement');
+        }
+        
+        // Afficher les images Firebase dans la galerie principale
+        setUploadedImages(firebaseImages);
+        console.log('✅ Galerie - Images Firebase affichées dans la galerie principale:', firebaseImages.length);
       } catch (error) {
         console.error('❌ Erreur chargement images Firebase:', error);
         // Fallback vers localStorage en cas d'erreur
@@ -414,14 +422,16 @@ const Galerie = ({ t }) => {
 
       {/* Galerie d'événements avec mode admin */}
       {showEventGallery && selectedEvent && (
-        <EventGallery
-          event={selectedEvent}
-          eventType="past"
-          onClose={closeEventGallery}
-          isAdmin={isAdmin}
-          onAdminAuth={checkAdminAuth}
-          t={t}
-        />
+        <ErrorBoundary>
+          <EventGallery
+            event={selectedEvent}
+            eventType="past"
+            onClose={closeEventGallery}
+            isAdmin={isAdmin}
+            onAdminAuth={checkAdminAuth}
+            t={t}
+          />
+        </ErrorBoundary>
       )}
     </div>
   );

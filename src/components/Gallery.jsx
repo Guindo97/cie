@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { dataManager } from '../utils/dataManager';
 import CloudinaryService from '../utils/cloudinaryService';
+import imageCache from '../utils/imageCache';
+import OptimizedImage from './OptimizedImage';
+import PerformanceStats from './PerformanceStats';
 
 const Gallery = ({ t, language }) => {
   const [images, setImages] = useState([]);
@@ -23,6 +26,14 @@ const Gallery = ({ t, language }) => {
   useEffect(() => {
     loadImages();
   }, []);
+
+  // Preload des images après le chargement initial
+  useEffect(() => {
+    if (images.length > 0) {
+      // Preload intelligent des images
+      imageCache.preloadImages(images, 'medium');
+    }
+  }, [images]);
 
   const loadImages = () => {
     try {
@@ -85,12 +96,17 @@ const Gallery = ({ t, language }) => {
     setSelectedImage(filteredImages[newIndex]);
   };
 
-  // Obtenir l'URL optimisée de Cloudinary
-  const getOptimizedImageUrl = (image) => {
+  // Obtenir l'URL optimisée de Cloudinary avec lazy loading
+  const getOptimizedImageUrl = (image, size = 'medium') => {
     if (image.public_id && CloudinaryService) {
+      const sizes = {
+        small: { width: 200, height: 200 },
+        medium: { width: 400, height: 400 },
+        large: { width: 800, height: 800 }
+      };
+      
       return CloudinaryService.getOptimizedUrl(image.public_id, {
-        width: 400,
-        height: 400,
+        ...sizes[size],
         crop: 'fill',
         quality: 'auto',
         fetch_format: 'auto'
@@ -99,18 +115,9 @@ const Gallery = ({ t, language }) => {
     return image.url;
   };
 
-  // Obtenir l'URL de la miniature
+  // Obtenir l'URL de la miniature avec lazy loading
   const getThumbnailUrl = (image) => {
-    if (image.public_id && CloudinaryService) {
-      return CloudinaryService.getOptimizedUrl(image.public_id, {
-        width: 200,
-        height: 200,
-        crop: 'fill',
-        quality: 'auto',
-        fetch_format: 'auto'
-      });
-    }
-    return image.url;
+    return getOptimizedImageUrl(image, 'small');
   };
 
   if (loading) {
@@ -221,11 +228,12 @@ const Gallery = ({ t, language }) => {
                       </div>
                     </div>
                   ) : (
-                    <img
-                      src={getThumbnailUrl(image)}
+                    <OptimizedImage
+                      image={image}
+                      size="small"
+                      className="w-full h-full"
                       alt={image.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
+                      priority={index < 6} // Priorité pour les 6 premières images
                     />
                   )}
                   
@@ -287,11 +295,12 @@ const Gallery = ({ t, language }) => {
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
                   />
                 ) : (
-                  <img
-                    src={getOptimizedImageUrl(selectedImage)}
-                    alt={selectedImage.title}
+                  <OptimizedImage
+                    image={selectedImage}
+                    size="large"
                     className="max-w-full max-h-full w-auto h-auto object-contain"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    alt={selectedImage.title}
+                    priority={true}
                   />
                 )}
               </div>
@@ -325,6 +334,9 @@ const Gallery = ({ t, language }) => {
           </div>
         )}
       </div>
+      
+      {/* Statistiques de performance (mode développement) */}
+      <PerformanceStats isVisible={process.env.NODE_ENV === 'development'} />
     </div>
   );
 };
