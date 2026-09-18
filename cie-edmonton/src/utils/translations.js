@@ -9,7 +9,7 @@ export const translations = {
       contact: "Contact"
     },
     home: {
-      title: "Bienvenue dans la Communauté Ivoirienne d'Edmonton",
+      title: "Bienvenue dans la Communauté Ivoiro-Canadienne d'Edmonton",
       subtitle: "Ensemble, nous préservons notre culture et construisons notre avenir au Canada",
       description:
         "Notre communauté dynamique rassemble les Ivoiriens et amis de la Côte d'Ivoire vivant à Edmonton et dans la région de l'Alberta. Nous organisons des événements culturels enrichissants, offrons du soutien personnalisé aux nouveaux arrivants et maintenons nos traditions ancestrales vivantes dans le respect de notre nouvelle patrie canadienne.",
@@ -312,7 +312,7 @@ export const translations = {
       contact: "Contact"
     },
     home: {
-      title: "Welcome to the Ivorian Community of Edmonton",
+      title: "Welcome to the Ivoiro-Canadian Community of Edmonton",
       subtitle: "Together, we preserve our culture and build our future in Canada",
       description:
         "Our dynamic community brings together Ivorians and friends of Côte d'Ivoire living in Edmonton and the Alberta region. We organize enriching cultural events, provide personalized support to newcomers, and keep our ancestral traditions alive while respecting our new Canadian homeland.",
