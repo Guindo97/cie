@@ -21,9 +21,13 @@ const Footer = ({ t, language, setCurrentPage }) => {
             {/* Bloc branding */}
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-2xl flag-gradient shadow-lg" />
+                <img
+                  src="/img/logocice.png"
+                  alt="Logo CICE"
+                  className="w-12 h-12 rounded-2xl shadow-lg object-cover bg-white"
+                />
                 <div>
-                  <div className="text-2xl font-bold gradient-text">CIE</div>
+                  <div className="text-2xl font-bold gradient-text">CICE</div>
                   <div className="text-xs text-gray-400">
                     {language === "fr" ? "Edmonton, Alberta" : "Edmonton, Alberta"}
                   </div>
@@ -116,8 +120,8 @@ const Footer = ({ t, language, setCurrentPage }) => {
             </p>
             <div className="text-xs text-gray-500 mt-2 md:mt-0">
               {language === "fr"
-                ? "Fait avec ❤ par la CIE"
-                : "Made with ❤ by the CIE"}
+                ? "Fait avec ❤ par la CICE"
+                : "Made with ❤ by the CICE"}
             </div>
           </div>
         </div>

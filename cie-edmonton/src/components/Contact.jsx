@@ -36,10 +36,8 @@ const Contact = ({ t }) => {
   ];
 
   const socialMedia = [
-    { icon: "fab fa-facebook", color: "bg-blue-600", name: "Facebook" },
-    { icon: "fab fa-instagram", color: "bg-pink-600", name: "Instagram" },
-    { icon: "fab fa-whatsapp", color: "bg-green-600", name: "WhatsApp" },
-    { icon: "fab fa-youtube", color: "bg-red-600", name: "YouTube" }
+    { icon: "fab fa-facebook", color: "bg-blue-600", name: "Facebook", href: "https://www.facebook.com/share/g/1PPJvHkUgP/" },
+    { icon: "fab fa-whatsapp", color: "bg-green-600", name: "WhatsApp", href: "https://chat.whatsapp.com/LJ5RCY2uu6dF3sNc2Lhh8P?s=sw&p=i&mlu=0&ilr=4" }
   ];
 
   return (
@@ -83,14 +81,17 @@ const Contact = ({ t }) => {
               </h3>
               <div className="flex space-x-4">
                 {socialMedia.map((social, index) => (
-                  <button
+                  <a
                     key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className={`${social.color} text-white w-12 h-12 rounded-xl flex items-center justify-center hover:shadow-lg transform hover:scale-110 transition-all duration-300`}
                     title={social.name}
                     aria-label={social.name}
                   >
                     <i className={social.icon}></i>
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
