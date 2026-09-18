@@ -38,14 +38,14 @@ const Footer = ({ t, language, setCurrentPage }) => {
               {/* Réseaux sociaux */}
               <div className="flex space-x-3 pt-2">
                 {[
-                  { icon: "fab fa-facebook-f",  label: "Facebook"  },
-                  { icon: "fab fa-instagram",  label: "Instagram" },
-                  { icon: "fab fa-whatsapp",   label: "WhatsApp"  },
-                  { icon: "fab fa-youtube",    label: "YouTube"   },
+                  { icon: "fab fa-facebook-f", label: "Facebook", href: "https://www.facebook.com/share/g/1PPJvHkUgP/" },
+                  { icon: "fab fa-whatsapp",   label: "WhatsApp", href: "https://chat.whatsapp.com/LJ5RCY2uu6dF3sNc2Lhh8P?s=sw&p=i&mlu=0&ilr=4" },
                 ].map((s, i) => (
                   <a
                     key={i}
-                    href="#"
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all shadow"
                     aria-label={s.label}
                     title={s.label}

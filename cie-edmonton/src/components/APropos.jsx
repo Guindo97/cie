@@ -117,6 +117,46 @@ const APropos = ({ t, language }) => {
           </div>
         </div>
 
+        {/* Informations légales / Legal Information Section */}
+        <div className="mb-20 text-center">
+          <h2 className="text-4xl font-bold text-gray-800 mb-12">
+            ⚖️ {language === "fr" ? "Informations légales" : "Legal Information"}
+          </h2>
+
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 text-left space-y-3">
+              <p className="text-gray-700">
+                <span className="font-semibold text-gray-900">
+                  {language === "fr" ? "Nom légal : " : "Legal name: "}
+                </span>
+                Communauté Ivoiro-Canadienne d'Edmonton Association
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold text-gray-900">
+                  {language === "fr" ? "Statut : " : "Status: "}
+                </span>
+                {language === "fr"
+                  ? "Association incorporée en Alberta, valide et active"
+                  : "Corporation incorporated in Alberta, valid and subsisting"}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold text-gray-900">
+                  {language === "fr"
+                    ? "Numéro d'accès corporatif (Alberta) : "
+                    : "Alberta Corporate Access Number: "}
+                </span>
+                5015906075
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold text-gray-900">
+                  {language === "fr" ? "Date d'incorporation : " : "Date of incorporation: "}
+                </span>
+                {language === "fr" ? "1er mars 2011" : "March 1, 2011"}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-8">
           {sections.map((section, index) => (
             <div key={index} className="card-hover bg-white p-8 rounded-2xl shadow-xl">
