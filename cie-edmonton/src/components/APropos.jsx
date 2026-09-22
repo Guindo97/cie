@@ -133,6 +133,12 @@ const APropos = ({ t, language }) => {
               </p>
               <p className="text-gray-700">
                 <span className="font-semibold text-gray-900">
+                  {language === "fr" ? "Adresse : " : "Address: "}
+                </span>
+                16524 115 St NW, Edmonton, Alberta
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold text-gray-900">
                   {language === "fr" ? "Statut : " : "Status: "}
                 </span>
                 {language === "fr"
@@ -145,7 +151,7 @@ const APropos = ({ t, language }) => {
                     ? "Numéro d'accès corporatif (Alberta) : "
                     : "Alberta Corporate Access Number: "}
                 </span>
-                5015906075
+                5015906076
               </p>
               <p className="text-gray-700">
                 <span className="font-semibold text-gray-900">

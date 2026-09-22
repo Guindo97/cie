@@ -28,6 +28,12 @@ const Contact = ({ t }) => {
       color: "text-blue-500"
     },
     {
+      icon: "fas fa-envelope",
+      title: "Email officiel / Official Email",
+      content: "bureaucice@cicealberta.org",
+      color: "text-blue-500"
+    },
+    {
       icon: "fas fa-phone",
       title: "Téléphone / Phone",
       content: t.contact.phone,

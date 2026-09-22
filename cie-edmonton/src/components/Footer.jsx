@@ -35,8 +35,8 @@ const Footer = ({ t, language, setCurrentPage }) => {
               </div>
               <p className="text-gray-400 leading-relaxed">
                 {language === "fr"
-                  ? "Communauté Ivoirienne d'Edmonton — préserver la culture, renforcer la communauté."
-                  : "Ivorian Community of Edmonton — preserving culture, strengthening community."}
+                  ? "Communauté Ivoiro-Canadienne d'Edmonton — préserver la culture, renforcer la communauté."
+                  : "Ivoiro-Canadian Community of Edmonton — preserving culture, strengthening community."}
               </p>
 
               {/* Réseaux sociaux */}

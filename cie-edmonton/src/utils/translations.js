@@ -247,7 +247,7 @@ export const translations = {
     contact: {
       title: "Contactez-nous",
       subtitle: "Nous sommes à votre écoute",
-      address: "Edmonton, Alberta, Canada",
+      address: "16524 115 St NW, Edmonton, Alberta, Canada",
       email: "bureaucice2022@gmail.com",
       phone: "+1 (780) 720-3996",
       sectionTitles: { info: "Informations de contact", follow: "Suivez-nous" },
@@ -550,7 +550,7 @@ export const translations = {
     contact: {
       title: "Contact Us",
       subtitle: "We are here to listen",
-      address: "Edmonton, Alberta, Canada",
+      address: "16524 115 St NW, Edmonton, Alberta, Canada",
       // email FR conservé côté EN (souhaité)
       email: "bureaucice2022@gmail.com",
       phone: "+1 (780) 720-3996",
