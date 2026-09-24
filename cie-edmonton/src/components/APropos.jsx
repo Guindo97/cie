@@ -129,7 +129,7 @@ const APropos = ({ t, language }) => {
                 <span className="font-semibold text-gray-900">
                   {language === "fr" ? "Nom légal : " : "Legal name: "}
                 </span>
-                Communauté Ivoiro-Canadienne d'Edmonton Association
+                Communauté Ivoiro-Canadienne d'Edmonton
               </p>
               <p className="text-gray-700">
                 <span className="font-semibold text-gray-900">
